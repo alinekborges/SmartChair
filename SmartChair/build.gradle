@@ -5,15 +5,22 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.2'
-
+        classpath 'com.android.tools.build:gradle:1.1.0'
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4+'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
 }
 
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+}
+
 allprojects {
     repositories {
-        jcenter()
+        maven { url "http://dl.bintray.com/populov/maven" }
+        mavenCentral()
     }
 }

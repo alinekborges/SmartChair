@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
 
 android {
     compileSdkVersion 22
@@ -19,7 +20,22 @@ android {
     }
 }
 
+apt {
+    arguments {
+        androidManifestFile variant.outputs[0].processResources.manifestFile
+        resourcePackageName 'com.alieeen.polen'
+
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:cardview-v7:21.0.0'
+    compile 'com.android.support:recyclerview-v7:21.0.0'
+    compile 'com.google.code.gson:gson:1.7.2'
+    apt 'org.androidannotations:androidannotations:3.0.1'
+    compile 'com.viewpagerindicator:library:2.4.1@aar'
+    compile 'org.androidannotations:androidannotations-api:3.0.1'
+
 }
