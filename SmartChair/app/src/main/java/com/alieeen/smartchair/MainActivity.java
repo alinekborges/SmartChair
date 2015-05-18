@@ -7,27 +7,41 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.alieeen.smartchair.bluetooth.BluetoothState;
 import com.alieeen.smartchair.bluetooth.DeviceList;
+import com.alieeen.smartchair.fragments.menu.MainFragment;
 import com.alieeen.smartchair.util.BluetoothActivity;
 
+import it.neokree.materialnavigationdrawer.MaterialNavigationDrawer;
+
 //https://github.com/akexorcist/Android-BluetoothSPPLibrary
-public class MainActivity extends BluetoothActivity {
+public class MainActivity extends MaterialNavigationDrawer {
 
 
     private static final String TAG = "MAIN";
 
+    @Override
+    public void init(Bundle savedInstanceState) {
+
+        this.addSection(newSection("Home", new MainFragment()));
+        //this.addSection(newSection("Câmeras", new CamerasFragment()));
+
+    }
+    /*
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Button btnConnect = (Button)findViewById(R.id.btn_devices_choose);
+
+        if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
+            btnConnect.setText("CONNECTED!");
+        }
+
         btnConnect.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
@@ -55,7 +69,7 @@ public class MainActivity extends BluetoothActivity {
                 finish();
             }
         }
-    }
+    }*/
 
 
 }
