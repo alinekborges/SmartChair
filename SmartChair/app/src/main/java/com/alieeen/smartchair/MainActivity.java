@@ -13,60 +13,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.alieeen.smartchair.bluetooth.BluetoothSPP;
 import com.alieeen.smartchair.bluetooth.BluetoothState;
 import com.alieeen.smartchair.bluetooth.DeviceList;
+import com.alieeen.smartchair.util.BluetoothActivity;
 
 //https://github.com/akexorcist/Android-BluetoothSPPLibrary
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BluetoothActivity {
 
-    BluetoothSPP bt;
+
+    private static final String TAG = "MAIN";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bt = new BluetoothSPP(this);
-
-        if(!bt.isBluetoothAvailable()) {
-            Toast.makeText(getApplicationContext()
-                    , "Bluetooth is not available"
-                    , Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
-        bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
-            public void onDeviceConnected(String name, String address) {
-                Toast.makeText(getApplicationContext()
-                        , "Connected to " + name
-                        , Toast.LENGTH_SHORT).show();
-            }
-
-            public void onDeviceDisconnected() {
-                Toast.makeText(getApplicationContext()
-                        , "Connection lost"
-                        , Toast.LENGTH_SHORT).show();
-            }
-
-            public void onDeviceConnectionFailed() {
-                Log.i("Check", "Unable to connect");
-            }
-        });
-
-        bt.setAutoConnectionListener(new BluetoothSPP.AutoConnectionListener() {
-            public void onNewConnection(String name, String address) {
-                Log.i("Check", "New Connection - " + name + " - " + address);
-            }
-
-            public void onAutoConnectionStarted() {
-                Log.i("Check", "Auto menu_connection started");
-            }
-        });
-
         Button btnConnect = (Button)findViewById(R.id.btn_devices_choose);
         btnConnect.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
+                    Log.i(TAG,"disconecting...");
                     bt.disconnect();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), DeviceList.class);
@@ -74,24 +39,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    public void onDestroy() {
-        super.onDestroy();
-        bt.stopService();
-    }
-
-    public void onStart() {
-        super.onStart();
-        if(!bt.isBluetoothEnabled()) {
-            bt.enable();
-        } else {
-            if(!bt.isServiceAvailable()) {
-                bt.setupService();
-                bt.startService(BluetoothState.DEVICE_OTHER);
-                setup();
-            }
-        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -110,14 +57,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setup() {
-        Button btnSend = (Button)findViewById(R.id.btnSend);
-        btnSend.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                bt.send("Text", true);
-            }
-        });
 
-        bt.autoConnect("HC-05");
-    }
 }
