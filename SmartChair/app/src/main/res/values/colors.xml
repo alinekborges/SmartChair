@@ -20,7 +20,7 @@
     <item name="text_white" type="color">#EEE</item>
     <item name="topBarLogin" type="color">#292929</item>
 
-    <item name="accent" type="color">#C6360C</item>
+    <item name="accent" type="color">#03C9A9</item>
     <item name="statusBarRed" type="color">#9E2B09</item>
     <item name="accent_dark" type="color">#BF360C</item>
 
@@ -29,8 +29,8 @@
     <item name="text_grey" type="color">#E4E4E4</item>
     <item name="text_darkgrey" type="color">#A3A3A3</item>
 
-    <item name="colorPrimary" type="color">#A42E0B</item>
-    <item name="colorPrimaryDark" type="color">#832408</item>
+    <item name="colorPrimary" type="color">#3498DB</item>
+    <item name="colorPrimaryDark" type="color">#2979AF</item>
 
 
 </resources>

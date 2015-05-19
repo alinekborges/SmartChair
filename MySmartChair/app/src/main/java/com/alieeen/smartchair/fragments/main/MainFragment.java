@@ -4,6 +4,7 @@ package com.alieeen.smartchair.fragments.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alieeen.smartchair.R;
+import com.alieeen.smartchair.bluetooth.BluetoothSPP;
 import com.alieeen.smartchair.bluetooth.BluetoothState;
 import com.alieeen.smartchair.bluetooth.DeviceList;
 
@@ -36,17 +38,25 @@ import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
  * Created by alinekborges on 18/05/15.
  */
 @EFragment
-public class MainFragment extends BluetoothFragment implements
+public class MainFragment extends Fragment implements
         RecognitionListener {
 
+    //************************************************
+    //Cool views to show what we need to show
+    private View v;
+    private Button btnConnect;
+    private TextView txtListening;
+    private Button btnSend;
+    private TextView txtCaptionText;
+    private TextView txtResultText;
 
+    //************************************************
+
+    //region speech recognition variables
     private static final String LOG_TAG = "MainFragment";
 
     /* Named searches allow to quickly reconfigure the decoder */
     private static final String KWS_SEARCH = "wakeup";
-    private static final String FORECAST_SEARCH = "forecast";
-    private static final String DIGITS_SEARCH = "digits";
-    private static final String PHONE_SEARCH = "phones";
     private static final String MENU_SEARCH = "menu";
 
     private static final String COMMAND_FRONT = "front";
@@ -60,21 +70,14 @@ public class MainFragment extends BluetoothFragment implements
 
     private SpeechRecognizer recognizer;
     private HashMap<String, Integer> captions;
+    //endregion
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment CitiesFragment.
-     */
-    private View v;
-    private Button btnConnect;
-    private TextView txtListening;
-    private Button btnSend;
-    private TextView txtCaptionText;
-    private TextView txtResultText;
+    //region bluetooth variables
+    private BluetoothSPP bluetooth;
+    //endregion
 
-
+    //region fragment lifecycle
+    //****************************************
     public static MainFragment newInstance() {
         MainFragment_ fragment = new MainFragment_();
         return fragment;
@@ -91,11 +94,6 @@ public class MainFragment extends BluetoothFragment implements
         captions = new HashMap<String, Integer>();
         captions.put(KWS_SEARCH, R.string.kws_caption);
         captions.put(MENU_SEARCH, R.string.menu_caption);
-        captions.put(DIGITS_SEARCH, R.string.digits_caption);
-        captions.put(PHONE_SEARCH, R.string.phone_caption);
-        captions.put(FORECAST_SEARCH, R.string.forecast_caption);
-
-
 
     }
 
@@ -105,11 +103,8 @@ public class MainFragment extends BluetoothFragment implements
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_main, container, false);
 
+        //Initialize components
         initComponents();
-
-
-        txtCaptionText
-                .setText("Preparing the recognizer");
         setUpSpeechRegonition();
 
         return v;
@@ -120,20 +115,7 @@ public class MainFragment extends BluetoothFragment implements
         super.onDestroy();
         recognizer.cancel();
         recognizer.shutdown();
-    }
-
-    @Background
-    public void setUpSpeechRegonition() {
-        try {
-            Assets assets = new Assets(getActivity());
-            File assetDir = assets.syncAssets();
-            Log.i(LOG_TAG, assetDir.getAbsolutePath());
-            setupRecognizer(assetDir);
-            switchSearch(KWS_SEARCH);
-        } catch (Exception e) {
-            Log.i(LOG_TAG, "ERRO");
-            txtCaptionText.setText("Failed to init recognizer " + e.getMessage());
-        }
+        bluetooth.stopService();
 
 
     }
@@ -165,6 +147,28 @@ public class MainFragment extends BluetoothFragment implements
             }
         });
     }
+
+    //endregion
+
+    //region Speech Recognition Listener
+
+    @Background
+    public void setUpSpeechRegonition() {
+        txtCaptionText.setText("Preparing the recognizer");
+        try {
+            Assets assets = new Assets(getActivity());
+            File assetDir = assets.syncAssets();
+            Log.i(LOG_TAG, assetDir.getAbsolutePath());
+            setupRecognizer(assetDir);
+            switchSearch(KWS_SEARCH);
+        } catch (Exception e) {
+            Log.i(LOG_TAG, "ERRO");
+            txtCaptionText.setText("Failed to init recognizer " + e.getMessage());
+        }
+
+    }
+
+
 
 
     /**
@@ -311,14 +315,18 @@ public class MainFragment extends BluetoothFragment implements
         switchSearch(KWS_SEARCH);
     }
 
+    //endregion
+
+
+    //region bluetooth
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
             if(resultCode == Activity.RESULT_OK)
-                bt.connect(data);
+                bluetooth.connect(data);
             btnConnect.setText("CONNECTED+01!");
         } else if(requestCode == BluetoothState.REQUEST_ENABLE_BT) {
             if(resultCode == Activity.RESULT_OK) {
-                bt.setupService();
+                bluetooth.setupService();
             } else {
                 Toast.makeText(getActivity()
                         , "Bluetooth was not enabled."
@@ -327,5 +335,72 @@ public class MainFragment extends BluetoothFragment implements
             }
         }
     }
+
+    private void setupBluetooth() {
+        bluetooth = new BluetoothSPP(getActivity());
+
+        if(!bluetooth.isBluetoothAvailable()) {
+            Toast.makeText(getActivity()
+                    , "Bluetooth is not available"
+                    , Toast.LENGTH_SHORT).show();
+            //finish();
+        }
+
+        bluetooth.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
+            public void onDeviceConnected(String name, String address) {
+                Toast.makeText(getActivity()
+                        , "Connected to " + name
+                        , Toast.LENGTH_SHORT).show();
+            }
+
+            public void onDeviceDisconnected() {
+                Toast.makeText(getActivity()
+                        , "Connection lost"
+                        , Toast.LENGTH_SHORT).show();
+            }
+
+            public void onDeviceConnectionFailed() {
+                Log.i("Check", "Unable to connect");
+            }
+        });
+
+        bluetooth.setAutoConnectionListener(new BluetoothSPP.AutoConnectionListener() {
+            public void onNewConnection(String name, String address) {
+                Log.i("Check", "New Connection - " + name + " - " + address);
+            }
+
+            public void onAutoConnectionStarted() {
+                Log.i("Check", "Auto menu_connection started");
+            }
+        });
+    }
+
+
+
+    public void onStart() {
+        super.onStart();
+        if(!bluetooth.isBluetoothEnabled()) {
+            bluetooth.enable();
+        } else {
+            if(!bluetooth.isServiceAvailable()) {
+                bluetooth.setupService();
+                bluetooth.startService(BluetoothState.DEVICE_OTHER);
+                setup();
+            }
+        }
+    }
+
+    public void setup() {
+        /*
+        Button btnSend = (Button)findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                bt.send("Text", true);
+            }
+        });*/
+
+        bluetooth.autoConnect("HC-05");
+    }
+    //endregion
 
 }
