@@ -49,8 +49,14 @@ public class MainFragment extends BluetoothFragment implements
     private static final String PHONE_SEARCH = "phones";
     private static final String MENU_SEARCH = "menu";
 
+    private static final String COMMAND_FRONT = "front";
+    private static final String COMMAND_BACK = "back";
+    private static final String COMMAND_LEFT = "left";
+    private static final String COMMAND_RIGHT = "right";
+    private static final String COMMAND_STOP = "stop";
+
     /* Keyword we are looking for to activate menu */
-    private static final String KEYPHRASE = "oh mighty computer";
+    private static final String KEYPHRASE = "command";
 
     private SpeechRecognizer recognizer;
     private HashMap<String, Integer> captions;
@@ -171,17 +177,45 @@ public class MainFragment extends BluetoothFragment implements
         if (hypothesis == null)
             return;
 
+
+
         String text = hypothesis.getHypstr();
+
+
         if (text.equals(KEYPHRASE))
             switchSearch(MENU_SEARCH);
-        else if (text.equals(DIGITS_SEARCH))
-            switchSearch(DIGITS_SEARCH);
-        else if (text.equals(PHONE_SEARCH))
-            switchSearch(PHONE_SEARCH);
-        else if (text.equals(FORECAST_SEARCH))
-            switchSearch(FORECAST_SEARCH);
-        else
-            txtResultText.setText(text);
+        else if (text.equals(COMMAND_FRONT)) {
+            txtResultText.setText(COMMAND_FRONT);
+            Log.i(LOG_TAG, COMMAND_FRONT);
+            switchSearch(MENU_SEARCH);
+        }
+        else if (text.equals(COMMAND_BACK)) {
+            Log.i(LOG_TAG, COMMAND_BACK);
+            switchSearch(MENU_SEARCH);
+            //txtResultText.setText(COMMAND_BACK);
+        }
+        else if (text.equals(COMMAND_LEFT)) {
+            Log.i(LOG_TAG, COMMAND_LEFT);
+            switchSearch(MENU_SEARCH);
+            txtResultText.setText(COMMAND_LEFT);
+        }
+        else if (text.equals(COMMAND_RIGHT)) {
+            Log.i(LOG_TAG, COMMAND_RIGHT);
+            switchSearch(MENU_SEARCH);
+            txtResultText.setText(COMMAND_RIGHT);
+        }
+        else if (text.equals(COMMAND_STOP)) {
+            Log.i(LOG_TAG, COMMAND_STOP);
+            switchSearch(MENU_SEARCH);
+            txtResultText.setText(COMMAND_STOP);
+        }
+
+        else {
+            txtResultText.setText("text hear: " + text);
+            switchSearch(MENU_SEARCH);
+        }
+
+
     }
 
     /**
@@ -254,16 +288,17 @@ public class MainFragment extends BluetoothFragment implements
         recognizer.addGrammarSearch(MENU_SEARCH, menuGrammar);
 
         // Create grammar-based search for digit recognition
-        File digitsGrammar = new File(assetsDir, "digits.gram");
-        recognizer.addGrammarSearch(DIGITS_SEARCH, digitsGrammar);
+        /*File digitsGrammar = new File(assetsDir, "digits.gram");
+        recognizer.addGrammarSearch(DIGITS_SEARCH, digitsGrammar);*/
 
         // Create language model search
+        /*
         File languageModel = new File(assetsDir, "weather.dmp");
         recognizer.addNgramSearch(FORECAST_SEARCH, languageModel);
 
         // Phonetic search
         File phoneticModel = new File(assetsDir, "en-phone.dmp");
-        recognizer.addAllphoneSearch(PHONE_SEARCH, phoneticModel);
+        recognizer.addAllphoneSearch(PHONE_SEARCH, phoneticModel);*/
     }
 
     @Override
