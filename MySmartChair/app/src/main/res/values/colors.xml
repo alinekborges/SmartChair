@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="blue" type="color">#FF33B5E5</item>
+    <item name="purple" type="color">#FFAA66CC</item>
+    <item name="green" type="color">#FF99CC00</item>
+    <item name="orange" type="color">#FFFFBB33</item>
+    <item name="red" type="color">#FFFF4444</item>
+    <item name="darkblue" type="color">#FF0099CC</item>
+    <item name="darkpurple" type="color">#FF9933CC</item>
+    <item name="darkgreen" type="color">#FF669900</item>
+    <item name="darkorange" type="color">#FFFF8800</item>
+    <item name="darkred" type="color">#FFCC0000</item>
+
+
+    <item name="light_cream" type="color">#FFF7F7F7</item>
+    <item name="light_grey" type="color">#FFF6F6F6</item>
+    <item name="dark_grey" type="color">#424242</item>
+    <item name="medium_grey" type="color">#d6d6d6</item>
+    <item name="text_white" type="color">#EEE</item>
+    <item name="topBarLogin" type="color">#292929</item>
+
+    <item name="accent" type="color">#C6360C</item>
+    <item name="statusBarRed" type="color">#9E2B09</item>
+    <item name="accent_dark" type="color">#BF360C</item>
+
+    <item name="background" type="color">#343434</item>
+    <item name="background_light" type="color">#595959</item>
+    <item name="text_grey" type="color">#E4E4E4</item>
+    <item name="text_darkgrey" type="color">#A3A3A3</item>
+
+    <item name="colorPrimary" type="color">#A42E0B</item>
+    <item name="colorPrimaryDark" type="color">#832408</item>
+
+
+</resources>

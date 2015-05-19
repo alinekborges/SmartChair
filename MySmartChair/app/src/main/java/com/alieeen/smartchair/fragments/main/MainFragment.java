@@ -1,5 +1,5 @@
 
-package com.alieeen.smartchair.fragments.menu;
+package com.alieeen.smartchair.fragments.main;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -22,7 +22,6 @@ import org.androidannotations.annotations.UiThread;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import edu.cmu.pocketsphinx.Assets;
@@ -40,10 +39,22 @@ import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
 public class MainFragment extends BluetoothFragment implements
         RecognitionListener {
 
-    private static final String KWS_FOWARD = "foward";
 
     private static final String LOG_TAG = "MainFragment";
+
+    /* Named searches allow to quickly reconfigure the decoder */
+    private static final String KWS_SEARCH = "wakeup";
+    private static final String FORECAST_SEARCH = "forecast";
+    private static final String DIGITS_SEARCH = "digits";
+    private static final String PHONE_SEARCH = "phones";
+    private static final String MENU_SEARCH = "menu";
+
+    /* Keyword we are looking for to activate menu */
     private static final String KEYPHRASE = "oh mighty computer";
+
+    private SpeechRecognizer recognizer;
+    private HashMap<String, Integer> captions;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -54,9 +65,9 @@ public class MainFragment extends BluetoothFragment implements
     private Button btnConnect;
     private TextView txtListening;
     private Button btnSend;
+    private TextView txtCaptionText;
+    private TextView txtResultText;
 
-    private SpeechRecognizer recognizer;
-    private HashMap<String, Integer> captions;
 
     public static MainFragment newInstance() {
         MainFragment_ fragment = new MainFragment_();
@@ -71,6 +82,15 @@ public class MainFragment extends BluetoothFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        captions = new HashMap<String, Integer>();
+        captions.put(KWS_SEARCH, R.string.kws_caption);
+        captions.put(MENU_SEARCH, R.string.menu_caption);
+        captions.put(DIGITS_SEARCH, R.string.digits_caption);
+        captions.put(PHONE_SEARCH, R.string.phone_caption);
+        captions.put(FORECAST_SEARCH, R.string.forecast_caption);
+
+
+
     }
 
     @Override
@@ -80,10 +100,20 @@ public class MainFragment extends BluetoothFragment implements
         v = inflater.inflate(R.layout.fragment_main, container, false);
 
         initComponents();
+
+
+        txtCaptionText
+                .setText("Preparing the recognizer");
         setUpSpeechRegonition();
 
-
         return v;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        recognizer.cancel();
+        recognizer.shutdown();
     }
 
     @Background
@@ -93,15 +123,21 @@ public class MainFragment extends BluetoothFragment implements
             File assetDir = assets.syncAssets();
             Log.i(LOG_TAG, assetDir.getAbsolutePath());
             setupRecognizer(assetDir);
+            switchSearch(KWS_SEARCH);
         } catch (Exception e) {
             Log.i(LOG_TAG, "ERRO");
+            txtCaptionText.setText("Failed to init recognizer " + e.getMessage());
         }
+
+
     }
 
     public void initComponents() {
         btnConnect = (Button) v.findViewById(R.id.btn_devices_choose);
         btnSend = (Button) v.findViewById(R.id.btnSend);
         txtListening = (TextView) v.findViewById(R.id.txt_listening);
+        txtCaptionText = (TextView) v.findViewById(R.id.caption_text);
+        txtResultText = (TextView) v.findViewById(R.id.result_text);
 
         btnConnect.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -125,48 +161,35 @@ public class MainFragment extends BluetoothFragment implements
     }
 
 
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
-            if(resultCode == Activity.RESULT_OK)
-                bt.connect(data);
-            btnConnect.setText("CONNECTED+01!");
-        } else if(requestCode == BluetoothState.REQUEST_ENABLE_BT) {
-            if(resultCode == Activity.RESULT_OK) {
-                bt.setupService();
-            } else {
-                Toast.makeText(getActivity()
-                        , "Bluetooth was not enabled."
-                        , Toast.LENGTH_SHORT).show();
-                //finish();
-            }
-        }
-    }
-
-    @Override
-    public void onBeginningOfSpeech() {
-
-    }
-
-    @Override
-    public void onEndOfSpeech() {
-
-    }
-
+    /**
+     * In partial result we get quick updates about current hypothesis. In
+     * keyword spotting mode we can react here, in other modes we need to wait
+     * for final result in onResult.
+     */
     @Override
     public void onPartialResult(Hypothesis hypothesis) {
         if (hypothesis == null)
             return;
 
         String text = hypothesis.getHypstr();
-        if (text.equals(KWS_FOWARD)) {
-            Log.i(LOG_TAG, "FOWARD");
-        }
+        if (text.equals(KEYPHRASE))
+            switchSearch(MENU_SEARCH);
+        else if (text.equals(DIGITS_SEARCH))
+            switchSearch(DIGITS_SEARCH);
+        else if (text.equals(PHONE_SEARCH))
+            switchSearch(PHONE_SEARCH);
+        else if (text.equals(FORECAST_SEARCH))
+            switchSearch(FORECAST_SEARCH);
+        else
+            txtResultText.setText(text);
     }
 
+    /**
+     * This callback is called when we stop the recognizer.
+     */
     @Override
     public void onResult(Hypothesis hypothesis) {
-        txtListening.setText("");
+        txtResultText.setText("");
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
             makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
@@ -174,16 +197,32 @@ public class MainFragment extends BluetoothFragment implements
     }
 
     @Override
-    public void onError(Exception e) {
-
+    public void onBeginningOfSpeech() {
     }
 
+    /**
+     * We stop recognizer here to get a final result
+     */
     @Override
-    public void onTimeout() {
-
+    public void onEndOfSpeech() {
+        if (!recognizer.getSearchName().equals(KWS_SEARCH))
+            switchSearch(KWS_SEARCH);
     }
 
-    private void setupRecognizer(File assetsDir) throws Exception {
+    private void switchSearch(String searchName) {
+        recognizer.stop();
+
+        // If we are not spotting, start listening with timeout (10000 ms or 10 seconds).
+        if (searchName.equals(KWS_SEARCH))
+            recognizer.startListening(searchName);
+        else
+            recognizer.startListening(searchName, 10000);
+
+        String caption = getResources().getString(captions.get(searchName));
+        txtCaptionText.setText(caption);
+    }
+
+    private void setupRecognizer(File assetsDir) throws IOException {
         // The recognizer can be configured to perform multiple searches
         // of different kind and switch between them
 
@@ -208,16 +247,50 @@ public class MainFragment extends BluetoothFragment implements
          */
 
         // Create keyword-activation search.
-        recognizer.addKeyphraseSearch(KWS_FOWARD, KEYPHRASE);
+        recognizer.addKeyphraseSearch(KWS_SEARCH, KEYPHRASE);
 
-        //startRecognition();
+        // Create grammar-based search for selection between demos
+        File menuGrammar = new File(assetsDir, "menu.gram");
+        recognizer.addGrammarSearch(MENU_SEARCH, menuGrammar);
 
+        // Create grammar-based search for digit recognition
+        File digitsGrammar = new File(assetsDir, "digits.gram");
+        recognizer.addGrammarSearch(DIGITS_SEARCH, digitsGrammar);
+
+        // Create language model search
+        File languageModel = new File(assetsDir, "weather.dmp");
+        recognizer.addNgramSearch(FORECAST_SEARCH, languageModel);
+
+        // Phonetic search
+        File phoneticModel = new File(assetsDir, "en-phone.dmp");
+        recognizer.addAllphoneSearch(PHONE_SEARCH, phoneticModel);
     }
 
-    @UiThread
-    public void startRecognition() {
-        Log.i(LOG_TAG, "start listening");
-        txtListening.setText("Listening.......");
-        recognizer.startListening(KWS_FOWARD);
+    @Override
+    public void onError(Exception error) {
+        txtCaptionText.setText(error.getMessage());
     }
+
+    @Override
+    public void onTimeout() {
+        switchSearch(KWS_SEARCH);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
+            if(resultCode == Activity.RESULT_OK)
+                bt.connect(data);
+            btnConnect.setText("CONNECTED+01!");
+        } else if(requestCode == BluetoothState.REQUEST_ENABLE_BT) {
+            if(resultCode == Activity.RESULT_OK) {
+                bt.setupService();
+            } else {
+                Toast.makeText(getActivity()
+                        , "Bluetooth was not enabled."
+                        , Toast.LENGTH_SHORT).show();
+                //finish();
+            }
+        }
+    }
+
 }
