@@ -56,7 +56,7 @@ public class SplashScreen extends AppCompatActivity implements Runnable{
         boolean isLoggedIn = SharedPrefs.isLoggedIn(this);
 
         //TODO testing only
-        isLoggedIn = true;
+        isLoggedIn = false;
 
         Intent i;
 

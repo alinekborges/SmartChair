@@ -85,4 +85,7 @@ public class BluetoothFragment extends Fragment {
 
         bt.autoConnect("HC-05");
     }
+
+    //app.akexorcist.bluetotohspp.library
 }
+

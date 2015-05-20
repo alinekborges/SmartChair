@@ -14,4 +14,16 @@
     <string name="title_activity_walkthrough">WalkthroughActivity</string>
     <string name="title_activity_main">MainActivity</string>
 
+    <string name="walktrough01_title">Easy and quick</string>
+    <string name="walktrough01_description">The chair will answer your voice commands and respond right away</string>
+
+    <string name="walktrough02_title">Bluetooth Connection</string>
+    <string name="walktrough02_description">Please click on the icon above to turn bluetooth on</string>
+
+    <string name="walktrough03_title">Safety First</string>
+    <string name="walktrough03_description">The chair will recognize and avoid obstacles in the way</string>
+
+
+   <string name="title_activity_login">LoginActivity</string>
+
 </resources>

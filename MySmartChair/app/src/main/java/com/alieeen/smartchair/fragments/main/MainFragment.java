@@ -41,6 +41,14 @@ import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
 public class MainFragment extends Fragment implements
         RecognitionListener {
 
+    /**
+     * 1 - front
+     * 2 - right
+     * 3 - left
+     * 4 - back
+     * 5 - stop
+     */
+
     //************************************************
     //Cool views to show what we need to show
     private View v;
@@ -53,7 +61,7 @@ public class MainFragment extends Fragment implements
     //************************************************
 
     //region speech recognition variables
-    private static final String LOG_TAG = "MainFragment";
+    private static final String LOG_TAG = "VOZ";
 
     /* Named searches allow to quickly reconfigure the decoder */
     private static final String KWS_SEARCH = "wakeup";
@@ -102,15 +110,19 @@ public class MainFragment extends Fragment implements
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_main, container, false);
-
         //Initialize components
         initComponents();
+        setupBluetooth();
         setUpSpeechRegonition();
 
         return v;
     }
 
     @Override
+
+
+
+
     public void onDestroy() {
         super.onDestroy();
         recognizer.cancel();
@@ -127,10 +139,11 @@ public class MainFragment extends Fragment implements
         txtCaptionText = (TextView) v.findViewById(R.id.caption_text);
         txtResultText = (TextView) v.findViewById(R.id.result_text);
 
+        /*
         btnConnect.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
-                    Log.i("MAIN", "disconecting...");
+                if (bluetooth.getServiceState() == BluetoothState.STATE_CONNECTED) {
+                    //Log.i("MAIN", "disconecting...");
                     btnConnect.setText("CONNECTED!");
                     //bt.disconnect();
                 } else {
@@ -138,12 +151,12 @@ public class MainFragment extends Fragment implements
                     startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
                 }
             }
-        });
+        });*/
 
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                bt.send("Text", true);
+                bluetooth.send("Text", true);
             }
         });
     }
@@ -181,13 +194,13 @@ public class MainFragment extends Fragment implements
         if (hypothesis == null)
             return;
 
-
-
         String text = hypothesis.getHypstr();
 
 
         if (text.equals(KEYPHRASE))
             switchSearch(MENU_SEARCH);
+
+        /*
         else if (text.equals(COMMAND_FRONT)) {
             txtResultText.setText(COMMAND_FRONT);
             Log.i(LOG_TAG, COMMAND_FRONT);
@@ -196,7 +209,7 @@ public class MainFragment extends Fragment implements
         else if (text.equals(COMMAND_BACK)) {
             Log.i(LOG_TAG, COMMAND_BACK);
             switchSearch(MENU_SEARCH);
-            //txtResultText.setText(COMMAND_BACK);
+            txtResultText.setText(COMMAND_BACK);
         }
         else if (text.equals(COMMAND_LEFT)) {
             Log.i(LOG_TAG, COMMAND_LEFT);
@@ -213,7 +226,7 @@ public class MainFragment extends Fragment implements
             switchSearch(MENU_SEARCH);
             txtResultText.setText(COMMAND_STOP);
         }
-
+        */
         else {
             txtResultText.setText("text hear: " + text);
             switchSearch(MENU_SEARCH);
@@ -229,8 +242,8 @@ public class MainFragment extends Fragment implements
     public void onResult(Hypothesis hypothesis) {
         txtResultText.setText("");
         if (hypothesis != null) {
-            String text = hypothesis.getHypstr();
-            makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            //String text = hypothesis.getHypstr();
+            //makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -316,7 +329,6 @@ public class MainFragment extends Fragment implements
     }
 
     //endregion
-
 
     //region bluetooth
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
