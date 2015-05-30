@@ -16,11 +16,9 @@ import android.widget.Toast;
 import com.alieeen.smartchair.R;
 import com.alieeen.smartchair.bluetooth.BluetoothSPP;
 import com.alieeen.smartchair.bluetooth.BluetoothState;
-import com.alieeen.smartchair.bluetooth.DeviceList;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.UiThread;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +29,6 @@ import edu.cmu.pocketsphinx.Hypothesis;
 import edu.cmu.pocketsphinx.RecognitionListener;
 import edu.cmu.pocketsphinx.SpeechRecognizer;
 
-import static android.widget.Toast.makeText;
 import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
 
 /**
@@ -56,7 +53,7 @@ public class MainFragment extends Fragment implements
     private TextView txtListening;
     private Button btnSend;
     private TextView txtCaptionText;
-    private TextView txtResultText;
+    //private TextView txtResultText;
 
     //************************************************
 
@@ -65,7 +62,7 @@ public class MainFragment extends Fragment implements
 
     /* Named searches allow to quickly reconfigure the decoder */
     private static final String KWS_SEARCH = "wakeup";
-    private static final String MENU_SEARCH = "menu";
+    private static final String MENU_SEARCH = "digits";
 
     private static final String COMMAND_FRONT = "front";
     private static final String COMMAND_BACK = "back";
@@ -74,7 +71,7 @@ public class MainFragment extends Fragment implements
     private static final String COMMAND_STOP = "stop";
 
     /* Keyword we are looking for to activate menu */
-    private static final String KEYPHRASE = "command";
+//    private static final String KEYPHRASE = "command";
 
     private SpeechRecognizer recognizer;
     private HashMap<String, Integer> captions;
@@ -111,8 +108,9 @@ public class MainFragment extends Fragment implements
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_main, container, false);
         //Initialize components
-        initComponents();
         setupBluetooth();
+        initComponents();
+
         setUpSpeechRegonition();
 
         return v;
@@ -137,7 +135,7 @@ public class MainFragment extends Fragment implements
         btnSend = (Button) v.findViewById(R.id.btnSend);
         txtListening = (TextView) v.findViewById(R.id.txt_listening);
         txtCaptionText = (TextView) v.findViewById(R.id.caption_text);
-        txtResultText = (TextView) v.findViewById(R.id.result_text);
+        //txtResultText = (TextView) v.findViewById(R.id.result_text);
 
         /*
         btnConnect.setOnClickListener(new View.OnClickListener() {
@@ -159,6 +157,48 @@ public class MainFragment extends Fragment implements
                 bluetooth.send("Text", true);
             }
         });
+
+        Button buttonFront = (Button) v.findViewById(R.id.button_front);
+        Button buttonRight = (Button) v.findViewById(R.id.button_right);
+        Button buttonLeft = (Button) v.findViewById(R.id.button_left);
+        Button buttonBack = (Button) v.findViewById(R.id.button_back);
+        Button buttonStop = (Button) v.findViewById(R.id.button_stop);
+
+        buttonFront.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bluetooth.send("1", true);
+            }
+        });
+
+        buttonRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bluetooth.send("2", true);
+            }
+        });
+
+        buttonLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bluetooth.send("3", true);
+            }
+        });
+
+        buttonBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bluetooth.send("4", true);
+            }
+        });
+
+        buttonStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bluetooth.send("5", true);
+            }
+        });
+
     }
 
     //endregion
@@ -174,15 +214,14 @@ public class MainFragment extends Fragment implements
             Log.i(LOG_TAG, assetDir.getAbsolutePath());
             setupRecognizer(assetDir);
             switchSearch(KWS_SEARCH);
+            //String caption = getResources().getString(captions.get(MENU_SEARCH));
+            //txtCaptionText.setText(caption);
         } catch (Exception e) {
             Log.i(LOG_TAG, "ERRO");
             txtCaptionText.setText("Failed to init recognizer " + e.getMessage());
         }
 
     }
-
-
-
 
     /**
      * In partial result we get quick updates about current hypothesis. In
@@ -195,10 +234,11 @@ public class MainFragment extends Fragment implements
             return;
 
         String text = hypothesis.getHypstr();
+        Log.i(LOG_TAG, "result = " + text);
 
-
-        if (text.equals(KEYPHRASE))
-            switchSearch(MENU_SEARCH);
+        switchSearch(MENU_SEARCH);
+        //if (text.equals(KEYPHRASE))
+        //    switchSearch(MENU_SEARCH);
 
         /*
         else if (text.equals(COMMAND_FRONT)) {
@@ -227,11 +267,10 @@ public class MainFragment extends Fragment implements
             txtResultText.setText(COMMAND_STOP);
         }
         */
-        else {
-            txtResultText.setText("text hear: " + text);
-            switchSearch(MENU_SEARCH);
-        }
-
+        //else {
+            //txtResultText.setText("text hear: " + text);
+            //switchSearch(MENU_SEARCH);
+        //}
 
     }
 
@@ -240,10 +279,11 @@ public class MainFragment extends Fragment implements
      */
     @Override
     public void onResult(Hypothesis hypothesis) {
-        txtResultText.setText("");
+        //txtResultText.setText("");
         if (hypothesis != null) {
-            //String text = hypothesis.getHypstr();
+            String text = hypothesis.getHypstr();
             //makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            Log.i(LOG_TAG, "onResult = " + text);
         }
     }
 
@@ -256,18 +296,22 @@ public class MainFragment extends Fragment implements
      */
     @Override
     public void onEndOfSpeech() {
-        if (!recognizer.getSearchName().equals(KWS_SEARCH))
-            switchSearch(KWS_SEARCH);
+        //reset();
+        //if (!recognizer.getSearchName().equals(KWS_SEARCH))
+            switchSearch(MENU_SEARCH);
     }
+
 
     private void switchSearch(String searchName) {
         recognizer.stop();
 
         // If we are not spotting, start listening with timeout (10000 ms or 10 seconds).
-        if (searchName.equals(KWS_SEARCH))
-            recognizer.startListening(searchName);
-        else
-            recognizer.startListening(searchName, 10000);
+        //if (searchName.equals(KWS_SEARCH))
+        //    recognizer.startListening(searchName);
+        //else {
+            recognizer.startListening(MENU_SEARCH, 100000);
+            Log.i(LOG_TAG,"search: " + searchName);
+        //}
 
         String caption = getResources().getString(captions.get(searchName));
         txtCaptionText.setText(caption);
@@ -277,15 +321,15 @@ public class MainFragment extends Fragment implements
         // The recognizer can be configured to perform multiple searches
         // of different kind and switch between them
 
+
         recognizer = defaultSetup()
                 .setAcousticModel(new File(assetsDir, "en-us-ptm"))
                 .setDictionary(new File(assetsDir, "cmudict-en-us.dict"))
-
                         // To disable logging of raw audio comment out this call (takes a lot of space on the device)
                 .setRawLogDir(assetsDir)
 
                         // Threshold to tune for keyphrase to balance between false alarms and misses
-                .setKeywordThreshold(1e-45f)
+                .setKeywordThreshold(1e-20f)
 
                         // Use context-independent phonetic search, context-dependent is too slow for mobile
                 .setBoolean("-allphone_ci", true)
@@ -298,11 +342,11 @@ public class MainFragment extends Fragment implements
          */
 
         // Create keyword-activation search.
-        recognizer.addKeyphraseSearch(KWS_SEARCH, KEYPHRASE);
+        //recognizer.addKeyphraseSearch(KWS_SEARCH, KEYPHRASE);
 
         // Create grammar-based search for selection between demos
-        File menuGrammar = new File(assetsDir, "menu.gram");
-        recognizer.addGrammarSearch(MENU_SEARCH, menuGrammar);
+        File menuGrammar = new File(assetsDir, "digits.gram");
+        recognizer.addKeywordSearch(MENU_SEARCH, menuGrammar);
 
         // Create grammar-based search for digit recognition
         /*File digitsGrammar = new File(assetsDir, "digits.gram");
@@ -325,7 +369,7 @@ public class MainFragment extends Fragment implements
 
     @Override
     public void onTimeout() {
-        switchSearch(KWS_SEARCH);
+        //switchSearch(KWS_SEARCH);
     }
 
     //endregion
@@ -353,7 +397,7 @@ public class MainFragment extends Fragment implements
 
         if(!bluetooth.isBluetoothAvailable()) {
             Toast.makeText(getActivity()
-                    , "Bluetooth is not available"
+                    , "BluButtonetooth is not available"
                     , Toast.LENGTH_SHORT).show();
             //finish();
         }

@@ -1,22 +1,5 @@
-#JSGF V1.0;
-
-grammar digits;
-
-<digit> = oh    |
-          zero  |
-          one   |
-          two   |
-          three |
-          four  |
-          five  |
-          six   |
-          seven |
-          eight |
-          nine  |
-          front |
-          back  |
-          stop  |
-          left  |
-          right;
-
-public <digits> = <digit>+;
+front /1e-1/
+left /1e-1/
+right /1e-1/
+back /1e-1/
+stop /1e-1/

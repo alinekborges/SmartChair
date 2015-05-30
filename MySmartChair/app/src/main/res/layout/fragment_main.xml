@@ -39,19 +39,43 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:typeface="sans" />
 
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center" >
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/result_text"
-                android:layout_width="wrap_content"
+            <Button
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-        </LinearLayout>
+                android:text="FRONT"
+                android:id="@+id/button_front"/>
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="RIGHT"
+                android:id="@+id/button_right"/>
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="LEFT"
+                android:id="@+id/button_left"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="BACK"
+                android:id="@+id/button_back"/>
+
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="STOP"
+                android:background="@android:color/holo_red_light"
+                android:id="@+id/button_stop"/>
+        </LinearLayout>
 
     </LinearLayout>
 
