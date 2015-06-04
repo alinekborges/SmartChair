@@ -1,5 +1,9 @@
 front /1e-1/
 left /1e-1/
 right /1e-1/
-back /1e-1/
+break /1e-1/
+go back /1e-1/
 stop /1e-1/
+pause /1e-1/
+return /1e-1/
+go ahead /1e-1/

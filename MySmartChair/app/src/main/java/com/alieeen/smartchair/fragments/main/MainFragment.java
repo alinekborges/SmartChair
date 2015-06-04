@@ -19,6 +19,7 @@ import com.alieeen.smartchair.bluetooth.BluetoothState;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +55,11 @@ public class MainFragment extends Fragment implements
     private Button btnSend;
     private TextView txtCaptionText;
     //private TextView txtResultText;
+
+    private TextView txt_front;
+    private TextView txt_back;
+    private TextView txt_right;
+    private TextView txt_left;
 
     //************************************************
 
@@ -96,6 +102,7 @@ public class MainFragment extends Fragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Log.i(LOG_TAG, "Main Fragment");
         captions = new HashMap<String, Integer>();
         captions.put(KWS_SEARCH, R.string.kws_caption);
         captions.put(MENU_SEARCH, R.string.menu_caption);
@@ -158,12 +165,20 @@ public class MainFragment extends Fragment implements
             }
         });
 
-        Button buttonFront = (Button) v.findViewById(R.id.button_front);
-        Button buttonRight = (Button) v.findViewById(R.id.button_right);
-        Button buttonLeft = (Button) v.findViewById(R.id.button_left);
-        Button buttonBack = (Button) v.findViewById(R.id.button_back);
-        Button buttonStop = (Button) v.findViewById(R.id.button_stop);
+        //Button buttonFront = (Button) v.findViewById(R.id.button_front);
+        //Button buttonRight = (Button) v.findViewById(R.id.button_right);
+        //Button buttonLeft = (Button) v.findViewById(R.id.button_left);
+        //Button buttonBack = (Button) v.findViewById(R.id.button_back);
+        //Button buttonStop = (Button) v.findViewById(R.id.button_stop);
 
+
+        txt_front = (TextView) v.findViewById(R.id.txt_front);
+        txt_back = (TextView) v.findViewById(R.id.txt_back);
+        txt_right = (TextView) v.findViewById(R.id.txt_right);
+        txt_left = (TextView) v.findViewById(R.id.txt_left);
+
+
+        /*
         buttonFront.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -198,7 +213,7 @@ public class MainFragment extends Fragment implements
                 bluetooth.send("5", true);
             }
         });
-
+*/
     }
 
     //endregion
@@ -223,6 +238,15 @@ public class MainFragment extends Fragment implements
 
     }
 
+    public void setTextResult(TextView tv) {
+        txt_back.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+        txt_front.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+        txt_right.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+        txt_left.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+
+        tv.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
+    }
+
     /**
      * In partial result we get quick updates about current hypothesis. In
      * keyword spotting mode we can react here, in other modes we need to wait
@@ -235,6 +259,28 @@ public class MainFragment extends Fragment implements
 
         String text = hypothesis.getHypstr();
         Log.i(LOG_TAG, "result = " + text);
+
+        switch (text) {
+            case "front ":
+                setTextResult(txt_front);
+                break;
+            case "ahead ":
+                setTextResult(txt_front);
+                break;
+            case "backward ":
+                setTextResult(txt_back);
+                break;
+            case "reverse ":
+                setTextResult(txt_back);
+                break;
+            case "right ":
+                setTextResult(txt_right);
+                break;
+            case "left ":
+                setTextResult(txt_left);
+                break;
+
+        }
 
         switchSearch(MENU_SEARCH);
         //if (text.equals(KEYPHRASE))
@@ -283,7 +329,7 @@ public class MainFragment extends Fragment implements
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
             //makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-            Log.i(LOG_TAG, "onResult = " + text);
+            //Log.i(LOG_TAG, "onResult = " + text);
         }
     }
 
@@ -309,8 +355,8 @@ public class MainFragment extends Fragment implements
         //if (searchName.equals(KWS_SEARCH))
         //    recognizer.startListening(searchName);
         //else {
-            recognizer.startListening(MENU_SEARCH, 100000);
-            Log.i(LOG_TAG,"search: " + searchName);
+            recognizer.startListening(MENU_SEARCH, 10000);
+           // Log.i(LOG_TAG,"search: " + searchName);
         //}
 
         String caption = getResources().getString(captions.get(searchName));
