@@ -1,16 +1,14 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    android:orientation="vertical">
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
 
-    <TextView android:text="hello" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/txt_listening"/>
-
-    <Button
+    <!--<Button
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -23,21 +21,164 @@
         android:layout_gravity="center_horizontal"
         android:text="SEND"
         android:id="@+id/btnSend"/>
+        -->
+
+    <RelativeLayout
+        android:id="@+id/bluetooth_layout"
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <ImageView
+            android:id="@+id/imgBluetoothStatus"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/bluetooth_status_on" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/imgBluetoothStatus"
+            android:layout_toRightOf="@+id/imgBluetoothStatus"
+            android:orientation="vertical"
+            android:paddingLeft="15dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
+
+                <TextView
+                    android:id="@+id/txt_bluetooth_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:text="Bluetooth:"
+                    android:textColor="@color/text_light"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/txt_bluetooth_devicename"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="sans-serif-light"
+                    android:text="HC-06"
+                    android:textColor="@color/text_light"
+                    android:textSize="17sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txt_bluetooth_address"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:fontFamily="sans-serif-light"
+                android:text=""
+                android:textColor="@color/text_light"
+                android:textSize="17sp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_microfone"
+            android:layout_width="35dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_img_microfone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/bluetooth_layout"
+        android:layout_above="@+id/layout_commands"
+        android:gravity="center"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/txt_front"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ahead"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <ImageView
+                android:layout_width="117dp"
+                android:layout_height="193dp"
+                android:src="@drawable/car_topview"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/img_car" />
+
+            <TextView
+                android:id="@+id/txt_break"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="break"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:layout_centerInParent="true"/>
+
+            <TextView
+                android:id="@+id/txt_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="right"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/img_car"
+                android:layout_toRightOf="@+id/img_car"
+                android:layout_marginLeft="16dp"
+                />
+
+            <TextView
+                android:id="@+id/txt_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="left"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@+id/img_car"
+                android:layout_toLeftOf="@+id/img_car"
+                android:layout_marginRight="16dp"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/txt_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="back"
+            android:textSize="24dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
 
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:orientation="vertical"
-        android:padding="16dp" >
-
-        <TextView
-            android:id="@+id/caption_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:typeface="sans" />
+        android:id="@+id/layout_commands"
+        android:gravity="top"
+        android:padding="16dp">
 
 
         <!--<LinearLayout
@@ -82,49 +223,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="ahead"
-                android:id="@+id/txt_front"
-                android:textSize="@dimen/abc_text_size_display_1_material"
-                android:textStyle="bold"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="backward"
-                android:id="@+id/txt_back"
-                android:textSize="@dimen/abc_text_size_display_1_material"
-                android:textStyle="bold"/>
+
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="right"
-                android:id="@+id/txt_right"
-                android:textSize="@dimen/abc_text_size_display_1_material"
-                android:textStyle="bold"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:text="left"
-                android:id="@+id/txt_left"
-                android:textSize="@dimen/abc_text_size_display_1_material"
-                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+
         </LinearLayout>
 
     </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

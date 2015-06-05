@@ -31,7 +31,7 @@ public class MainFragmentGoogle extends BluetoothFragment {
      */
     private View v;
     private Button btnConnect;
-    private TextView txtListening;
+    //private TextView txtListening;
     private Button btnSend;
 
     private HashMap<String, Integer> captions;
@@ -71,8 +71,9 @@ public class MainFragmentGoogle extends BluetoothFragment {
     public void initComponents() {
         btnConnect = (Button) v.findViewById(R.id.btn_devices_choose);
         btnSend = (Button) v.findViewById(R.id.btnSend);
-        txtListening = (TextView) v.findViewById(R.id.txt_listening);
+        //txtListening = (TextView) v.findViewById(R.id.txt_listening);
 
+        /*
         btnConnect.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
@@ -84,14 +85,14 @@ public class MainFragmentGoogle extends BluetoothFragment {
                     startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
                 }
             }
-        });
+        });*/
 
-
+        /*
         btnSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 bt.send("Text", true);
             }
-        });
+        });*/
     }
 
 
