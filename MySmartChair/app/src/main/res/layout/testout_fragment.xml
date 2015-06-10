@@ -3,4 +3,213 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <!--<Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="DEVICES"
+            android:id="@+id/btn_devices_choose"/>
+
+        <Button
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="SEND"
+            android:id="@+id/btnSend"/>
+            -->
+
+        <RelativeLayout
+            android:id="@+id/bluetooth_layout"
+            android:layout_width="match_parent"
+            android:layout_height="70dp">
+
+            <ImageView
+                android:id="@+id/imgBluetoothStatus"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/bluetooth_status_on" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/imgBluetoothStatus"
+                android:layout_toRightOf="@+id/imgBluetoothStatus"
+                android:orientation="vertical"
+                android:paddingLeft="15dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5">
+
+                    <TextView
+                        android:id="@+id/txt_bluetooth_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-light"
+                        android:text="Bluetooth:"
+                        android:textColor="@color/text_light"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:id="@+id/txt_bluetooth_devicename"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:fontFamily="sans-serif-light"
+                        android:text="HC-06"
+                        android:textColor="@color/text_light"
+                        android:textSize="17sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txt_bluetooth_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:fontFamily="sans-serif-light"
+                    android:text=""
+                    android:textColor="@color/text_light"
+                    android:textSize="17sp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/img_microfone"
+                android:layout_width="32dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_commands"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_below="@id/bluetooth_layout"
+            android:gravity="center_horizontal"
+
+            android:orientation="vertical"
+            >
+
+            <Button
+                android:id="@+id/txt_front"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ahead"
+                android:textSize="22sp"
+                android:textColor="@color/text_light"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <ImageView
+                    android:layout_width="117dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/car_topview"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/img_car"
+                    android:visibility="invisible"/>
+
+                <Button
+                    android:id="@+id/txt_break"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="break"
+                    android:layout_centerInParent="true"
+                    android:textSize="22sp"
+                    android:textColor="@color/text_light"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"/>
+
+                <Button
+                    android:id="@+id/txt_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="right"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/img_car"
+                    android:layout_toRightOf="@+id/img_car"
+                    android:layout_marginLeft="16dp"
+                    android:textSize="22sp"
+                    android:textColor="@color/text_light"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    />
+
+                <Button
+                    android:id="@+id/txt_left"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="left"
+
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/img_car"
+                    android:layout_toLeftOf="@+id/img_car"
+                    android:layout_marginRight="16dp"
+                    android:textSize="22sp"
+                    android:textColor="@color/text_light"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/txt_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="back"
+                android:textSize="22sp"
+                android:textColor="@color/text_light"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/layout_commands">
+
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
+
+
 </LinearLayout>

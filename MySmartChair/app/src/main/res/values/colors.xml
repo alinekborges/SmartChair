@@ -30,6 +30,9 @@
     <item name="text_darkgrey" type="color">#A3A3A3</item>
     <item name="text_light" type="color">#949494</item>
 
+    <item name="chart1" type="color">#F4F4F4</item>
+    <item name="chart2" type="color">#EEE</item>
+
     <item name="colorPrimary" type="color">#3498DB</item>
     <item name="colorPrimaryDark" type="color">#2979AF</item>
 
