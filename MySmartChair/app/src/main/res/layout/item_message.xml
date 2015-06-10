@@ -2,10 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="6dp"
     android:layout_marginLeft="12dp"
     android:layout_marginRight="12dp"
-    android:layout_marginTop="6dp"
+
     android:orientation="vertical">
 
     <LinearLayout
@@ -17,17 +16,22 @@
         >
 
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@drawable/ic_arduino"/>
         
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="4dp"
             android:id="@+id/txt_message_arduino"
-            android:text="feoinviuenrbvidfnsnnifrinfeni  idwai  idisu cdsihcs suhcishdsi hidsidhsidue" />
+            android:text="feoinviuenrbvidfnsnnifrinfeni  idwai  idisu cdsihcs suhcishdsi hidsidhsidue"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:background="@android:color/white"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -35,11 +39,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/layout_message_chair"
-        android:visibility="invisible"
+        android:visibility="visible"
         >
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="16dp"
             android:layout_marginTop="4dp"
@@ -47,11 +51,16 @@
             android:gravity="right"
             android:text="feoinviuenrbvidfnsnnifrinfeni  idwai  idisu cdsihcs suhcishdsi hidsidhsidue"
             android:layout_toLeftOf="@+id/img_smart"
-            android:layout_toStartOf="@+id/img_smart" />
+            android:layout_toStartOf="@+id/img_smart"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:background="@android:color/white"/>
 
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@drawable/icon"
             android:id="@+id/img_smart"
             android:layout_alignParentRight="true"/>

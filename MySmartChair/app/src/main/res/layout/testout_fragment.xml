@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -101,22 +102,21 @@
         <LinearLayout
             android:id="@+id/layout_commands"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="180dp"
             android:layout_below="@id/bluetooth_layout"
             android:gravity="center_horizontal"
-
             android:orientation="vertical"
             >
 
             <Button
-                android:id="@+id/txt_front"
+                android:id="@+id/buttonAhead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ahead"
-                android:textSize="22sp"
+                android:textSize="18sp"
                 android:textColor="@color/text_light"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"/>
 
@@ -127,19 +127,19 @@
 
                 <ImageView
                     android:layout_width="117dp"
-                    android:layout_height="100dp"
+                    android:layout_height="80dp"
                     android:src="@drawable/car_topview"
                     android:layout_centerHorizontal="true"
                     android:id="@+id/img_car"
                     android:visibility="invisible"/>
 
                 <Button
-                    android:id="@+id/txt_break"
+                    android:id="@+id/buttonBreak"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="break"
                     android:layout_centerInParent="true"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     android:textColor="@color/text_light"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
@@ -147,7 +147,7 @@
                     android:paddingRight="16dp"/>
 
                 <Button
-                    android:id="@+id/txt_right"
+                    android:id="@+id/buttonRight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="right"
@@ -155,7 +155,7 @@
                     android:layout_toEndOf="@+id/img_car"
                     android:layout_toRightOf="@+id/img_car"
                     android:layout_marginLeft="16dp"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     android:textColor="@color/text_light"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
@@ -164,7 +164,7 @@
                     />
 
                 <Button
-                    android:id="@+id/txt_left"
+                    android:id="@+id/buttonLeft"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="left"
@@ -173,7 +173,7 @@
                     android:layout_toStartOf="@+id/img_car"
                     android:layout_toLeftOf="@+id/img_car"
                     android:layout_marginRight="16dp"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     android:textColor="@color/text_light"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
@@ -183,11 +183,11 @@
             </RelativeLayout>
 
             <Button
-                android:id="@+id/txt_back"
+                android:id="@+id/buttonBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="back"
-                android:textSize="22sp"
+                android:textSize="18sp"
                 android:textColor="@color/text_light"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
@@ -205,6 +205,14 @@
 
         </LinearLayout>
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:background="#DDD"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/layout_commands"
+            />
 
 
     </RelativeLayout>

@@ -15,9 +15,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alieeen.smartchair.App;
+import com.alieeen.smartchair.MainActivity;
 import com.alieeen.smartchair.R;
 import com.alieeen.smartchair.bluetooth.BluetoothSPP;
 import com.alieeen.smartchair.bluetooth.BluetoothState;
+import com.alieeen.smartchair.util.Directions;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
@@ -118,7 +121,6 @@ public class MainFragment extends Fragment implements
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_main, container, false);
         //Initialize components
-        setupBluetooth();
         initComponents();
         setUpSpeechRegonition();
 
@@ -154,21 +156,6 @@ public class MainFragment extends Fragment implements
         img_microfone.setBackgroundResource(R.drawable.microphone_animation);
         microfone_animation = (AnimationDrawable) img_microfone.getBackground();
         microfone_animation.start();
-
-        /*
-        btnConnect.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (bluetooth.getServiceState() == BluetoothState.STATE_CONNECTED) {
-                    //Log.i("MAIN", "disconecting...");
-                    btnConnect.setText("CONNECTED!");
-                    //bt.disconnect();
-                } else {
-                    Intent intent = new Intent(getActivity(), DeviceList.class);
-                    startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
-                }
-            }
-        });*/
-
 
 
     }
@@ -216,33 +203,45 @@ public class MainFragment extends Fragment implements
             return;
 
         String text = hypothesis.getHypstr();
-        bluetooth.send(text, true);
+
+
         Log.i(LOG_TAG, "result = " + text);
+
 
         switch (text) {
             case "front ":
                 setTextResult(txt_front);
+                bluetoothSend(Directions.Front);
                 break;
             case "ahead ":
                 setTextResult(txt_front);
+                bluetoothSend(Directions.Front);
                 break;
             case "backward ":
                 setTextResult(txt_back);
+                bluetoothSend(Directions.Back);
                 break;
             case "reverse ":
                 setTextResult(txt_back);
+                bluetoothSend(Directions.Back);
                 break;
             case "right ":
                 setTextResult(txt_right);
+                bluetoothSend(Directions.Right);
                 break;
             case "left ":
                 setTextResult(txt_left);
+                bluetoothSend(Directions.Left);
                 break;
 
         }
 
         switchSearch(MENU_SEARCH);
 
+    }
+
+    private void bluetoothSend(Directions directions) {
+        ((MainActivity)getActivity()).bluetoothSend(directions);
     }
 
     /**
@@ -294,6 +293,7 @@ public class MainFragment extends Fragment implements
                         // To disable logging of raw audio comment out this call (takes a lot of space on the device)
                 .setRawLogDir(assetsDir)
 
+
                         // Threshold to tune for keyphrase to balance between false alarms and misses
                 .setKeywordThreshold(1e-20f)
 
@@ -326,85 +326,6 @@ public class MainFragment extends Fragment implements
 
     //endregion
 
-    //region bluetooth
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
-            if(resultCode == Activity.RESULT_OK)
-                bluetooth.connect(data);
-                //btnConnect.setText("CONNECTED+01!");
-        } else if(requestCode == BluetoothState.REQUEST_ENABLE_BT) {
-            if(resultCode == Activity.RESULT_OK) {
-                bluetooth.setupService();
-            } else {
-                Toast.makeText(getActivity()
-                        , "Bluetooth was not enabled."
-                        , Toast.LENGTH_SHORT).show();
-
-            }
-        }
-    }
-
-    private void setupBluetooth() {
-        bluetooth = new BluetoothSPP(getActivity());
-
-        if(!bluetooth.isBluetoothAvailable()) {
-            Toast.makeText(getActivity()
-                    , "BluButtonetooth is not available"
-                    , Toast.LENGTH_SHORT).show();
-            //finish();
-        }
-
-        bluetooth.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
-            public void onDeviceConnected(String name, String address) {
-                Toast.makeText(getActivity()
-                        , "Connected to " + name
-                        , Toast.LENGTH_SHORT).show();
-            }
-
-            public void onDeviceDisconnected() {
-                Toast.makeText(getActivity()
-                        , "Connection lost"
-                        , Toast.LENGTH_SHORT).show();
-            }
-
-            public void onDeviceConnectionFailed() {
-                Log.i("Check", "Unable to connect");
-
-            }
-        });
-        bluetooth.setAutoConnectionListener(new BluetoothSPP.AutoConnectionListener() {
-            public void onNewConnection(String name, String address) {
-                bluetoothAddress = address;
-                Log.i("Check", "New Connection - " + name + " - " + address);
-
-            }
-
-            public void onAutoConnectionStarted() {
-                Log.i("Check", "Auto menu_connection started");
-            }
-        });
-
-        bluetooth.setBluetoothStateListener(new BluetoothSPP.BluetoothStateListener() {
-            public void onServiceStateChanged(int state) {
-                if (state == BluetoothState.STATE_CONNECTED) {
-                    printBluetoothInfo();
-                }
-                // Do something when successfully connected
-                else if (state == BluetoothState.STATE_CONNECTING) {
-
-                }
-                // Do something while connecting
-                else if (state == BluetoothState.STATE_LISTEN) {
-
-                }
-                // Do something when device is waiting for connection
-                else if (state == BluetoothState.STATE_NONE) {
-                    printBluetoothError("");
-                }
-                // Do something when device don't have any connection
-            }
-        });
-    }
 
     public void printBluetoothInfo() {
 
@@ -427,32 +348,6 @@ public class MainFragment extends Fragment implements
     }
 
 
-    public void onStart() {
-        super.onStart();
-        if(!bluetooth.isBluetoothEnabled()) {
-            bluetooth.enable();
-        } else {
-            if(!bluetooth.isServiceAvailable()) {
-                bluetooth.setupService();
-                bluetooth.startService(BluetoothState.DEVICE_OTHER);
-                setup();
-
-            }
-        }
-    }
-
-    public void setup() {
-
-
-        /*Button btnSend = (Button) v.findViewById(R.id.btnSend);
-        btnSend.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                Log.i(LOG_TAG,"send test");
-                bluetooth.send("Test", true);
-            }*/
-               bluetooth.autoConnect(DEVICE_NAME);
-
-    }
     //endregion
 
 }

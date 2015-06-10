@@ -5,8 +5,8 @@ package com.alieeen.smartchair.model;
  */
 public class Message {
 
-    private String received;
-    private String sent;
+    private String received = "";
+    private String sent = "";
 
     public String getReceived() {
         return received;

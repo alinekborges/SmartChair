@@ -42,12 +42,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.ViewHo
         } else if (!item.getSent().isEmpty()) {
             holder.layoutSent.setVisibility(View.VISIBLE);
             holder.layoutReceived.setVisibility(View.INVISIBLE);
+            holder.txtSent.setText(item.getSent());
         }
 
-        //holder.text.setText(item.getText());
-        //holder.image.setImageBitmap(null);
-        //Picasso.with(holder.image.getContext()).cancelRequest(holder.image);
-        //Picasso.with(holder.image.getContext()).load(item.getImage()).into(holder.image);
         holder.itemView.setTag(item);
     }
 

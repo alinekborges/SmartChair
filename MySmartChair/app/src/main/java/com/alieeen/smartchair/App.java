@@ -1,5 +1,6 @@
 package com.alieeen.smartchair;
 
+import com.alieeen.smartchair.bluetooth.BluetoothSPP;
 import com.alieeen.smartchair.model.Message;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class App {
 
     private ArrayList<Message> messages = new ArrayList<>();
     private ArrayList<Message> receivedMessages = new ArrayList<>();
+    private BluetoothSPP bluetooth;
 
 
     public ArrayList<Message> getMessages() {
@@ -50,4 +52,14 @@ public class App {
         message.setSent(m);
         messages.add(message);
     }
+
+    public BluetoothSPP getBluetooth() {
+        return bluetooth;
+    }
+
+    public void setBluetooth(BluetoothSPP bluetooth) {
+        this.bluetooth = bluetooth;
+    }
+
+
 }
