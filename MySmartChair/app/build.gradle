@@ -37,6 +37,7 @@ dependencies {
     compile 'org.androidannotations:androidannotations-api:3.0.1'
     apt 'org.androidannotations:androidannotations:3.0.1'
     compile 'it.neokree:MaterialNavigationDrawer:1.3.3'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.0'
 }
 
 ant.importBuild 'assets.xml'

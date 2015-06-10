@@ -51,7 +51,7 @@ public class MainFragment extends Fragment implements
 
     private final String DEVICE_NAME = "HC-05";
 
-    //************************************************
+                                                                                                                                                                                                                                                        //************************************************
     //Cool views to show what we need to show
     private View v;
     private TextView txt_front;
@@ -82,13 +82,17 @@ public class MainFragment extends Fragment implements
     private String bluetoothAddress = "";
     //endregion
 
+    public BluetoothSPP getBluetooth() {
+        return bluetooth;
+    }
+
     //region bluetooth variables
     private BluetoothSPP bluetooth;
     //endregion
 
     //region fragment lifecycle
     //****************************************
-    public static MainFragment newInstance() {
+    public static MainFragment_ newInstance() {
         MainFragment_ fragment = new MainFragment_();
         return fragment;
     }
@@ -118,8 +122,6 @@ public class MainFragment extends Fragment implements
         initComponents();
         setUpSpeechRegonition();
 
-
-
         return v;
     }
 
@@ -132,7 +134,7 @@ public class MainFragment extends Fragment implements
         super.onDestroy();
         recognizer.cancel();
         recognizer.shutdown();
-        bluetooth.stopService();
+        //bluetooth.stopService();
 
 
     }
@@ -166,7 +168,6 @@ public class MainFragment extends Fragment implements
                 }
             }
         });*/
-
 
 
 
@@ -448,10 +449,8 @@ public class MainFragment extends Fragment implements
             public void onClick(View v){
                 Log.i(LOG_TAG,"send test");
                 bluetooth.send("Test", true);
-            }
-        });*/
-
-        bluetooth.autoConnect(DEVICE_NAME);
+            }*/
+               bluetooth.autoConnect(DEVICE_NAME);
 
     }
     //endregion

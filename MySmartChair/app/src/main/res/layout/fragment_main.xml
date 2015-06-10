@@ -84,7 +84,7 @@
 
         <ImageView
             android:id="@+id/img_microfone"
-            android:layout_width="35dp"
+            android:layout_width="32dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"

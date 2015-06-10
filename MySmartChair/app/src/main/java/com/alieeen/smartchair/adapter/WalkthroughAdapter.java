@@ -8,6 +8,7 @@ import com.alieeen.smartchair.fragments.walktrough.FragmentWalkthrough01;
 import com.alieeen.smartchair.fragments.walktrough.FragmentWalkthrough02;
 import com.alieeen.smartchair.fragments.walktrough.FragmentWalkthrough03;
 import com.alieeen.smartchair.fragments.walktrough.FragmentWalkthrough04;
+import com.alieeen.smartchair.fragments.walktrough.FragmentWalkthrough04_;
 
 /**
  * Created by alinekborges on 20/05/15.
@@ -30,7 +31,7 @@ public class WalkthroughAdapter extends FragmentPagerAdapter {
             case 2:
                 return FragmentWalkthrough03.newInstance();
             case 3:
-                return FragmentWalkthrough04.newInstance();
+                return FragmentWalkthrough04_.newInstance();
             default:
                 return FragmentWalkthrough01.newInstance();
         }
