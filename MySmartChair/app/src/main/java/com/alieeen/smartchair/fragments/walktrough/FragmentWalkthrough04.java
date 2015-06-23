@@ -238,5 +238,16 @@ public class FragmentWalkthrough04 extends Fragment implements RecognitionListen
         //switchSearch(KWS_SEARCH);
     }
 
+    public void onDestroy() {
+        super.onDestroy();
+        recognizer.cancel();
+        recognizer.shutdown();
+        //bluetooth.stopService();
+
+
+    }
+
+
+
     //endregion
 }

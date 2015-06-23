@@ -90,6 +90,7 @@ public class WalkthroughActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent i = new Intent(WalkthroughActivity.this, MainActivity.class);
                 startActivity(i);
+                finish();
             }
         });
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 
@@ -23,12 +24,14 @@ import com.alieeen.smartchair.fragments.main.TestOutFragment_;
 import com.alieeen.smartchair.util.Directions;
 
 import it.neokree.materialnavigationdrawer.MaterialNavigationDrawer;
+import it.neokree.materialnavigationdrawer.elements.MaterialSection;
 
 //https://github.com/akexorcist/Android-BluetoothSPPLibrary
 public class MainActivity extends MaterialNavigationDrawer {
 
     private static final String TAG = "MAIN";
-    private final String DEVICE_NAME = "HC-05";
+    private static final String B_TAG = "BLUETOOTH";
+    private final String DEVICE_NAME = "HC-06";
 
     //region bluetooth variables
     private BluetoothSPP bluetooth;
@@ -39,7 +42,7 @@ public class MainActivity extends MaterialNavigationDrawer {
     private MainFragment_ fragmentMain;
     private StatisticsFragment fragmentStatistics;
     private TestOutFragment_ fragmentTestOut;
-
+    private boolean isConnected;
 
     //endregion
 
@@ -47,13 +50,15 @@ public class MainActivity extends MaterialNavigationDrawer {
     public void init(Bundle savedInstanceState) {
 
 
-
+        this.isConnected = false;
         fragmentMain = new MainFragment_();
         setupBluetooth();
         //this.bluetooth = fragmentMain.getBluetooth();
 
         fragmentStatistics = new StatisticsFragment();
         fragmentTestOut = new TestOutFragment_();
+
+
 
         this.disableLearningPattern();
         this.setDrawerHeaderImage(R.drawable.drawer_header);
@@ -66,27 +71,40 @@ public class MainActivity extends MaterialNavigationDrawer {
         this.addBottomSection(newSection("SETTINGS", new SettingsFragment()));
         this.addBottomSection(newSection("ABOUT", new AboutUsFragment()));
 
-    }
+        //this.setDefaultSectionLoaded(4);
 
+    }
 
 
     public void bluetoothSend(String message) {
 
 
-        if (bluetooth != null) {
+        if (bluetooth != null && isConnected) {
             bluetooth.send(message, true);
             Log.i("BLUETOOTH SEND", "sent: " + message);
             App.getInstance().addSentMessage(message);
             fragmentTestOut.updateData();
         } else {
-            Log.i("BLUETOOTH", "Bluetooth object null");
+            sendHandShake();
+            fragmentMain.printBluetoothError("Not Connected to "+ DEVICE_NAME);
+            Log.i("BLUETOOTH", "Bluetooth not really connected");
         }
 
+    }
+
+    public void bluetoothTestSend(String message) {
+        bluetooth.send(message, true);
+        Log.i("BLUETOOTH SEND", "sent: " + message);
+        App.getInstance().addSentMessage(message);
+        fragmentTestOut.updateData();
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        if (bluetooth == null) {
+            return;
+        }
         if(!bluetooth.isBluetoothEnabled()) {
             bluetooth.enable();
         } else {
@@ -100,16 +118,32 @@ public class MainActivity extends MaterialNavigationDrawer {
     }
 
     private void bluetoothAutoConnect() {
+        Log.i("Check", "start auto connection");
         bluetooth.autoConnect(DEVICE_NAME);
+        if (!isConnected) {
+            sendHandShake();
+        }
+    }
+
+    private void sendHandShake() {
+        bluetooth.send("SmartChairAndroid", true);
     }
 
     public void bluetoothSend(Directions direction) {
         bluetoothSend(direction.getString());
     }
 
+    public void bluetoothTestSend(Directions direction) {
+        bluetoothTestSend(direction.getString());
+    }
+
     private void setupBluetooth() {
         bluetooth = new BluetoothSPP(this);
         App.getInstance().setBluetooth(bluetooth);
+
+        if (bluetooth == null) {
+            return;
+        }
 
         if(!bluetooth.isBluetoothAvailable()) {
             Toast.makeText(this
@@ -170,6 +204,25 @@ public class MainActivity extends MaterialNavigationDrawer {
         });
         //
 
+        bluetooth.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
+            @Override
+            public void onDataReceived(byte[] data, String message) {
+                receiveData(message);
+            }
+        });
+
+
+    }
+
+    private void receiveData(String message) {
+        App.getInstance().addReceivedMessage(message);
+        fragmentTestOut.updateData();
+
+        if (message.contains("OK")) {
+            Log.i(B_TAG, "handshake sucessfull");
+            isConnected = true;
+            fragmentMain.printBluetoothInfo();
+        }
 
     }
 
@@ -190,5 +243,13 @@ public class MainActivity extends MaterialNavigationDrawer {
 
             }
         }
+    }
+
+    public boolean isConnected() {
+        return isConnected;
+    }
+
+    public void setIsConnected(boolean isConnected) {
+        this.isConnected = isConnected;
     }
 }

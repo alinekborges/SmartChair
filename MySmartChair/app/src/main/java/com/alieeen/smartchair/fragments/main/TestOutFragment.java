@@ -47,27 +47,27 @@ public class TestOutFragment extends Fragment {
 
     @Click(R.id.buttonAhead)
     public void sendCommandAhead() {
-        ((MainActivity)getActivity()).bluetoothSend(Directions.Front);
+        ((MainActivity)getActivity()).bluetoothTestSend(Directions.Front);
     }
 
     @Click(R.id.buttonBack)
     public void sendCommandBack() {
-        ((MainActivity)getActivity()).bluetoothSend(Directions.Back);
+        ((MainActivity)getActivity()).bluetoothTestSend(Directions.Back);
     }
 
     @Click(R.id.buttonLeft)
     public void sendCommandLeft() {
-        ((MainActivity)getActivity()).bluetoothSend(Directions.Left);
+        ((MainActivity)getActivity()).bluetoothTestSend(Directions.Left);
     }
 
     @Click(R.id.buttonRight)
     public void sendCommandRight() {
-        ((MainActivity)getActivity()).bluetoothSend(Directions.Right);
+        ((MainActivity)getActivity()).bluetoothTestSend(Directions.Right);
     }
 
     @Click(R.id.buttonBreak)
     public void sendCommandBreak() {
-        ((MainActivity)getActivity()).bluetoothSend(Directions.Stop);
+        ((MainActivity)getActivity()).bluetoothTestSend(Directions.Stop);
     }
 
     @Override
@@ -77,8 +77,11 @@ public class TestOutFragment extends Fragment {
     }
 
     public void updateData() {
-        adapter.notifyDataSetChanged();
-        recyclerView.scrollToPosition(adapter.getItemCount()-1);
+
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+            recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+        }
 
     }
 
@@ -88,7 +91,6 @@ public class TestOutFragment extends Fragment {
         App.getInstance().addReceivedMessage("Hello");
 
         recyclerView.setHasFixedSize(true);
-
 
         // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());

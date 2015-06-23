@@ -52,7 +52,7 @@ public class MainFragment extends Fragment implements
      * 5 - stop
      */
 
-    private final String DEVICE_NAME = "HC-05";
+    private final String DEVICE_NAME = "HC-06";
 
                                                                                                                                                                                                                                                         //************************************************
     //Cool views to show what we need to show
@@ -157,6 +157,7 @@ public class MainFragment extends Fragment implements
         microfone_animation = (AnimationDrawable) img_microfone.getBackground();
         microfone_animation.start();
 
+        printBluetoothError("Not Connected");
 
     }
 
@@ -203,37 +204,26 @@ public class MainFragment extends Fragment implements
             return;
 
         String text = hypothesis.getHypstr();
+        Log.i(LOG_TAG, "resultado = " + text);
 
-
-        Log.i(LOG_TAG, "result = " + text);
-
-
-        switch (text) {
-            case "front ":
-                setTextResult(txt_front);
-                bluetoothSend(Directions.Front);
-                break;
-            case "ahead ":
-                setTextResult(txt_front);
-                bluetoothSend(Directions.Front);
-                break;
-            case "backward ":
-                setTextResult(txt_back);
-                bluetoothSend(Directions.Back);
-                break;
-            case "reverse ":
-                setTextResult(txt_back);
-                bluetoothSend(Directions.Back);
-                break;
-            case "right ":
-                setTextResult(txt_right);
-                bluetoothSend(Directions.Right);
-                break;
-            case "left ":
-                setTextResult(txt_left);
-                bluetoothSend(Directions.Left);
-                break;
-
+        if (text.contains("front")) {
+            setTextResult(txt_front);
+            bluetoothSend(Directions.Front);
+        } else if (text.contains("ahead")) {
+            setTextResult(txt_front);
+            bluetoothSend(Directions.Front);
+        } else if (text.contains("backward")) {
+            setTextResult(txt_back);
+            bluetoothSend(Directions.Back);
+        } else if (text.contains("reverse")) {
+            setTextResult(txt_back);
+            bluetoothSend(Directions.Back);
+        } else if (text.contains("right")) {
+            setTextResult(txt_right);
+            bluetoothSend(Directions.Right);
+        } else if (text.contains("left")) {
+            setTextResult(txt_left);
+            bluetoothSend(Directions.Left);
         }
 
         switchSearch(MENU_SEARCH);
@@ -252,6 +242,7 @@ public class MainFragment extends Fragment implements
         //txtResultText.setText("");
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
+            Log.i(LOG_TAG, "resultaaaaado = " + text);
         }
     }
 
@@ -329,22 +320,23 @@ public class MainFragment extends Fragment implements
 
     public void printBluetoothInfo() {
 
-        txt_bluetooth_address.setText(this.bluetoothAddress);
-        txt_bluetooth_devicename.setText(bluetooth.getConnectedDeviceName());
-        txt_bluetooth_status.setText("Bluetooth:");
+        //txt_bluetooth_address.setText(this.bluetoothAddress);
+        //txt_bluetooth_devicename.setText(bluetooth.getConnectedDeviceName());
+        //txt_bluetooth_status.setText("Bluetooth:");
 
-        txt_bluetooth_status.setTextColor(getResources().getColor(R.color.text_light));
-        txt_bluetooth_devicename.setTextColor(getResources().getColor(R.color.text_light));
-        txt_bluetooth_address.setTextColor(getResources().getColor(R.color.text_light));
+        //txt_bluetooth_status.setTextColor(getResources().getColor(R.color.text_light));
+        //txt_bluetooth_devicename.setTextColor(getResources().getColor(R.color.text_light));
+        //txt_bluetooth_address.setTextColor(getResources().getColor(R.color.text_light));
 
 
     }
 
     public void printBluetoothError(String error) {
-        txt_bluetooth_address.setText("");
-        txt_bluetooth_devicename.setText(error);
-        txt_bluetooth_status.setText("Bluetooth connection error");
-        txt_bluetooth_status.setTextColor(getResources().getColor(R.color.text_error));
+        //txt_bluetooth_address.setText("");
+        //txt_bluetooth_address.setText(error);
+        //txt_bluetooth_status.setText("");
+        //txt_bluetooth_status.setText("Bluetooth connection error");
+        //txt_bluetooth_status.setTextColor(getResources().getColor(R.color.text_error));
     }
 
 

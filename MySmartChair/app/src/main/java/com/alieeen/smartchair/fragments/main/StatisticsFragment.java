@@ -243,6 +243,52 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         rightAxis.setEnabled(false);
     }
 
+    private void addEntryEncoder(int value) {
+
+        LineData data = encoderChart.getData();
+
+        if (data != null) {
+
+            LineDataSet set = data.getDataSetByIndex(0);
+            // set.addEntryEncoder(...); // can be called as well
+
+            if (set == null) {
+                set = createSet("encoder");
+                data.addDataSet(set);
+            }
+
+            // add a new x-value first
+
+            Entry entry = new Entry(value, set.getEntryCount());
+            data.addEntry(entry,0);
+
+            // let the chart know it's data has changed
+            encoderChart.notifyDataSetChanged();
+
+            // limit the number of visible entries
+
+
+
+            encoderChart.setVisibleYRange(100, YAxis.AxisDependency.LEFT);
+
+            // move to the latest entry
+            encoderChart.moveViewToX(data.getXValCount() - 121);
+
+            encoderChart.setScaleMinima((float) data.getXValCount() / 10f, 1f);
+            //encoderChart.centerViewPort(float val, int xindex)
+            //encoderChart.centerViewTo(data.getXValCount(), 50, YAxis.AxisDependency.RIGHT);
+
+            // this automatically refreshes the chart (calls invalidate())
+            encoderChart.moveViewTo(data.getXValCount() - 7, 55f,
+                    YAxis.AxisDependency.LEFT);
+
+            // redraw the chart
+            encoderChart.invalidate();
+
+
+        }
+    }
+
     private void addEntryEncoder() {
 
         LineData data = encoderChart.getData();
@@ -284,6 +330,50 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
 
             // redraw the chart
              encoderChart.invalidate();
+
+
+        }
+    }
+
+    private void addEntryAngle(float value) {
+
+        LineData data = angleChart.getData();
+
+        if (data != null) {
+
+            LineDataSet set = data.getDataSetByIndex(0);
+            // set.addEntryEncoder(...); // can be called as well
+
+            if (set == null) {
+                set = createSet("angle");
+                data.addDataSet(set);
+            }
+
+            Entry entry = new Entry(value, set.getEntryCount());
+            data.addEntry(entry,0);
+
+            // let the chart know it's data has changed
+            angleChart.notifyDataSetChanged();
+
+            // limit the number of visible entries
+
+
+
+            angleChart.setVisibleYRange(40, YAxis.AxisDependency.LEFT);
+
+            // move to the latest entry
+            angleChart.moveViewToX(data.getXValCount() - 121);
+
+            angleChart.setScaleMinima((float) data.getXValCount() / 10f, 1f);
+            //encoderChart.centerViewPort(float val, int xindex)
+            //encoderChart.centerViewTo(data.getXValCount(), 50, YAxis.AxisDependency.RIGHT);
+
+            // this automatically refreshes the chart (calls invalidate())
+            angleChart.moveViewTo(data.getXValCount() - 7, 0f,
+                    YAxis.AxisDependency.LEFT);
+
+            // redraw the chart
+            angleChart.invalidate();
 
 
         }
