@@ -102,12 +102,20 @@
         android:gravity="center"
         android:orientation="vertical"
         >
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/warning_red"
+            android:layout_gravity="top|center_horizontal"
+            android:id="@+id/img_warning"
+            android:visibility="invisible"/>
+
 
         <TextView
             android:id="@+id/txt_front"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ahead"
+            android:text="go ahead"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -163,7 +171,7 @@
             android:id="@+id/txt_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="back"
+            android:text="reverse"
             android:textSize="24dp"
             android:textStyle="bold" />
 
@@ -245,6 +253,8 @@
         </LinearLayout>
 
     </LinearLayout>
+
+
 
 
 </RelativeLayout>

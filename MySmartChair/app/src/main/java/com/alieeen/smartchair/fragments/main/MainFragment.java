@@ -4,6 +4,8 @@ package com.alieeen.smartchair.fragments.main;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -62,6 +64,7 @@ public class MainFragment extends Fragment implements
     private TextView txt_right;
     private TextView txt_left;
     private TextView txt_stop;
+    private ImageView warning;
 
     private TextView txt_bluetooth_devicename;
     private TextView txt_bluetooth_address;
@@ -123,6 +126,34 @@ public class MainFragment extends Fragment implements
         //Initialize components
         initComponents();
         setUpSpeechRegonition();
+        ///showWarning();
+
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                for(int i = 0; i < 5000; i++) {
+                    if (i > 3) {
+                    getActivity().runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+
+                                showWarning();
+
+                        }
+                    });}
+
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+
 
         return v;
     }
@@ -156,6 +187,8 @@ public class MainFragment extends Fragment implements
         img_microfone.setBackgroundResource(R.drawable.microphone_animation);
         microfone_animation = (AnimationDrawable) img_microfone.getBackground();
         microfone_animation.start();
+
+        warning = (ImageView) v.findViewById(R.id.img_warning);
 
         printBluetoothError("Not Connected");
 
@@ -209,7 +242,8 @@ public class MainFragment extends Fragment implements
         if (text.contains("front")) {
             setTextResult(txt_front);
             bluetoothSend(Directions.Front);
-        } else if (text.contains("ahead")) {
+        }
+        if (text.contains("ahead")) {
             setTextResult(txt_front);
             bluetoothSend(Directions.Front);
         } else if (text.contains("backward")) {
@@ -225,6 +259,10 @@ public class MainFragment extends Fragment implements
             setTextResult(txt_left);
             bluetoothSend(Directions.Left);
         }
+        if (text.contains("break")) {
+        setTextResult(txt_stop);
+        bluetoothSend(Directions.Stop);
+    }
 
         switchSearch(MENU_SEARCH);
 
@@ -339,6 +377,19 @@ public class MainFragment extends Fragment implements
         //txt_bluetooth_status.setTextColor(getResources().getColor(R.color.text_error));
     }
 
+    public void showWarning() {
+        warning.setVisibility(View.VISIBLE);
+        final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+        //tg.startTone(ToneGenerator.TONE_PROP_BEEP);
+        tg.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 1200); //200 is duration in ms
+    }
+
+    public void hideWarning() {
+        warning.setVisibility(View.VISIBLE);
+        final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+        //tg.startTone(ToneGenerator.TONE_PROP_BEEP);
+        tg.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 1200); //200 is duration in ms
+    }
 
     //endregion
 
