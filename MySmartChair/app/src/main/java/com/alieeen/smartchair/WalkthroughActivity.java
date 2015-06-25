@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.alieeen.smartchair.adapter.WalkthroughAdapter;
+import com.alieeen.smartchair.util.SharedPrefs;
 import com.viewpagerindicator.CirclePageIndicator;
 import com.viewpagerindicator.PageIndicator;
 
@@ -88,6 +89,7 @@ public class WalkthroughActivity extends ActionBarActivity {
         DoneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPrefs.setLoggedIn(WalkthroughActivity.this);
                 Intent i = new Intent(WalkthroughActivity.this, MainActivity.class);
                 startActivity(i);
                 finish();

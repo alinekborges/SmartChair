@@ -88,7 +88,7 @@ public class TestOutFragment extends Fragment {
     @AfterViews
     public void initComponents() {
 
-        App.getInstance().addReceivedMessage("Hello");
+        //App.getInstance().addReceivedMessage("Hello");
 
         recyclerView.setHasFixedSize(true);
 

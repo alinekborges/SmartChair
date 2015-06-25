@@ -128,6 +128,7 @@ public class MainFragment extends Fragment implements
         setUpSpeechRegonition();
         ///showWarning();
 
+        /*
         new Thread(new Runnable() {
 
             @Override
@@ -153,22 +154,18 @@ public class MainFragment extends Fragment implements
                 }
             }
         }).start();
-
+        */
 
         return v;
     }
 
     @Override
 
-
-
-
     public void onDestroy() {
         super.onDestroy();
         recognizer.cancel();
         recognizer.shutdown();
         //bluetooth.stopService();
-
 
     }
 
@@ -259,7 +256,7 @@ public class MainFragment extends Fragment implements
             setTextResult(txt_left);
             bluetoothSend(Directions.Left);
         }
-        if (text.contains("break")) {
+        if (text.contains("break") || text.contains("fuck")) {
         setTextResult(txt_stop);
         bluetoothSend(Directions.Stop);
     }
@@ -382,13 +379,12 @@ public class MainFragment extends Fragment implements
         final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
         //tg.startTone(ToneGenerator.TONE_PROP_BEEP);
         tg.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 1200); //200 is duration in ms
+
     }
 
     public void hideWarning() {
-        warning.setVisibility(View.VISIBLE);
-        final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
-        //tg.startTone(ToneGenerator.TONE_PROP_BEEP);
-        tg.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 1200); //200 is duration in ms
+        warning.setVisibility(View.INVISIBLE);
+
     }
 
     //endregion

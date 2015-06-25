@@ -22,6 +22,7 @@ import com.alieeen.smartchair.fragments.main.StatisticsFragment;
 import com.alieeen.smartchair.fragments.main.TestOutFragment_;
 
 import com.alieeen.smartchair.util.Directions;
+import com.alieeen.smartchair.util.UIUpdater;
 
 import it.neokree.materialnavigationdrawer.MaterialNavigationDrawer;
 import it.neokree.materialnavigationdrawer.elements.MaterialSection;
@@ -37,18 +38,17 @@ public class MainActivity extends MaterialNavigationDrawer {
     private BluetoothSPP bluetooth;
     private String bluetoothAddress;
 
+    UIUpdater mUIUpdater;
 
     //holding instance of our fragments
     private MainFragment_ fragmentMain;
     private StatisticsFragment fragmentStatistics;
     private TestOutFragment_ fragmentTestOut;
     private boolean isConnected;
-
     //endregion
 
     @Override
     public void init(Bundle savedInstanceState) {
-
 
         this.isConnected = false;
         fragmentMain = new MainFragment_();
@@ -57,8 +57,6 @@ public class MainActivity extends MaterialNavigationDrawer {
 
         fragmentStatistics = new StatisticsFragment();
         fragmentTestOut = new TestOutFragment_();
-
-
 
         this.disableLearningPattern();
         this.setDrawerHeaderImage(R.drawable.drawer_header);
@@ -71,21 +69,30 @@ public class MainActivity extends MaterialNavigationDrawer {
         this.addBottomSection(newSection("SETTINGS", new SettingsFragment()));
         this.addBottomSection(newSection("ABOUT", new AboutUsFragment()));
 
-        //this.setDefaultSectionLoaded(4);
+        mUIUpdater = new UIUpdater(new Runnable() {
+            @Override
+            public void run() {
+                sendHandShake();
+            }
+        });
 
+        mUIUpdater.startUpdates();
+
+    }
+
+    public void onDestroy() {
+        mUIUpdater.stopUpdates();
     }
 
 
     public void bluetoothSend(String message) {
 
-
-        if (bluetooth != null && isConnected) {
+        if (bluetooth != null) {
             bluetooth.send(message, true);
             Log.i("BLUETOOTH SEND", "sent: " + message);
             App.getInstance().addSentMessage(message);
             fragmentTestOut.updateData();
         } else {
-            sendHandShake();
             fragmentMain.printBluetoothError("Not Connected to "+ DEVICE_NAME);
             Log.i("BLUETOOTH", "Bluetooth not really connected");
         }
@@ -103,6 +110,7 @@ public class MainActivity extends MaterialNavigationDrawer {
     public void onStart() {
         super.onStart();
         if (bluetooth == null) {
+            isConnected = false;
             return;
         }
         if(!bluetooth.isBluetoothEnabled()) {
@@ -126,7 +134,12 @@ public class MainActivity extends MaterialNavigationDrawer {
     }
 
     private void sendHandShake() {
-        bluetooth.send("SmartChairAndroid", true);
+        try {
+           //bluetoothSend("0");
+        } catch (Exception ex) {
+
+        }
+
     }
 
     public void bluetoothSend(Directions direction) {
@@ -147,7 +160,7 @@ public class MainActivity extends MaterialNavigationDrawer {
 
         if(!bluetooth.isBluetoothAvailable()) {
             Toast.makeText(this
-                    , "BluButtonetooth is not available"
+                    , "Buttonetooth is not available"
                     , Toast.LENGTH_SHORT).show();
             //finish();
         }
@@ -218,10 +231,24 @@ public class MainActivity extends MaterialNavigationDrawer {
         App.getInstance().addReceivedMessage(message);
         fragmentTestOut.updateData();
 
-        if (message.contains("OK")) {
+        Log.i("Bluetooth", "received: " + message);
+
+        if (message.contains("Hello")) {
             Log.i(B_TAG, "handshake sucessfull");
             isConnected = true;
             fragmentMain.printBluetoothInfo();
+        }
+        if (message.contains("Sonar")) {
+            fragmentMain.showWarning();
+            Log.i("BT", "Warning");
+        }
+        if (message.contains("V:")) {
+            String[] separated = message.split(":");
+            float velocity = Float.parseFloat(separated[1]);
+        }
+        if (message.contains("A")) {
+            String[] separeted = message.split(":");
+            float angle = Float.parseFloat(separeted[1]);
         }
 
     }

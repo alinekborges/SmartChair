@@ -75,7 +75,7 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         setUpAngleChart();
 
 
-
+/*
                 new Thread(new Runnable() {
 
             @Override
@@ -99,7 +99,7 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
                     }
                 }
             }
-        }).start();
+        }).start();*/
 
         return v;
     }
@@ -243,7 +243,8 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         rightAxis.setEnabled(false);
     }
 
-    private void addEntryEncoder(int value) {
+    private void addEntryEncoder(float value) {
+
 
         LineData data = encoderChart.getData();
 
@@ -299,7 +300,7 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
             // set.addEntryEncoder(...); // can be called as well
 
             if (set == null) {
-                set = createSet("encoder");
+                set = createSet("velocity");
                 data.addDataSet(set);
             }
 

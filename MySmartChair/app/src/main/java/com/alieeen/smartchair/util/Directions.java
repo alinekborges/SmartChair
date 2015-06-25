@@ -14,9 +14,9 @@ public enum Directions {
      */
 
     Front("1"),
-    Back("2"),
-    Right("3"),
-    Left("4"),
+    Back("4"),
+    Right("2"),
+    Left("3"),
     Stop("5");
 
     private final String command;
