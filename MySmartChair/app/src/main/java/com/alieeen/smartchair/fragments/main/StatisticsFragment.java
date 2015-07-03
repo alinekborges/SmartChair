@@ -3,6 +3,7 @@ package com.alieeen.smartchair.fragments.main;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -196,7 +197,7 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         encoderChart.setDrawGridBackground(false);
 
         // if disabled, scaling can be done on x- and y-axis separately
-        encoderChart.setPinchZoom(false);
+        encoderChart.setPinchZoom(true);
 
 
         // set an alternative background color
@@ -234,8 +235,8 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         YAxis leftAxis = encoderChart.getAxisLeft();
         //leftAxis.setTypeface(tf);
         leftAxis.setTextColor(Color.DKGRAY);
-        leftAxis.setAxisMaxValue(80f);
-        leftAxis.setAxisMinValue(30f);
+        leftAxis.setAxisMaxValue(2f);
+        leftAxis.setAxisMinValue(0f);
         leftAxis.setStartAtZero(true);
         leftAxis.setDrawGridLines(true);
 
@@ -243,9 +244,14 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         rightAxis.setEnabled(false);
     }
 
-    private void addEntryEncoder(float value) {
+    public void addEntryVelocity(float value) {
 
+        if (encoderChart == null) {
+            return;
 
+        }
+
+        Log.i("CHART","add velocity to chart");
         LineData data = encoderChart.getData();
 
         if (data != null) {
@@ -254,14 +260,18 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
             // set.addEntryEncoder(...); // can be called as well
 
             if (set == null) {
-                set = createSet("encoder");
+                set = createSet("velocity (m/s)");
                 data.addDataSet(set);
             }
 
             // add a new x-value first
 
-            Entry entry = new Entry(value, set.getEntryCount());
-            data.addEntry(entry,0);
+            data.addXValue(mMonths[data.getXValCount() % 12] + " "
+                    + (year + data.getXValCount() / 12));
+            //Entry entry = new Entry(value, set.getEntryCount());
+            //data.addEntry(entry,set.getEntryCount());
+            data.addEntry(new Entry(value, set.getEntryCount()), 0);
+            Log.i("chart", "index : " + set.getEntryCount());
 
             // let the chart know it's data has changed
             encoderChart.notifyDataSetChanged();
@@ -336,7 +346,12 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         }
     }
 
-    private void addEntryAngle(float value) {
+    public void addEntryAngle(float value) {
+
+        if (angleChart == null) {
+            return;
+
+        }
 
         LineData data = angleChart.getData();
 
@@ -350,8 +365,10 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
                 data.addDataSet(set);
             }
 
-            Entry entry = new Entry(value, set.getEntryCount());
-            data.addEntry(entry,0);
+            data.addXValue(mMonths[data.getXValCount() % 12] + " "
+                    + (year + data.getXValCount() / 12));
+            data.addEntry(new Entry(value, set.getEntryCount()), 0);
+
 
             // let the chart know it's data has changed
             angleChart.notifyDataSetChanged();

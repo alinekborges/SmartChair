@@ -238,17 +238,20 @@ public class MainActivity extends MaterialNavigationDrawer {
             isConnected = true;
             fragmentMain.printBluetoothInfo();
         }
-        if (message.contains("Sonar")) {
+        else if (message.contains("Sonar")) {
             fragmentMain.showWarning();
             Log.i("BT", "Warning");
+
         }
-        if (message.contains("V:")) {
+        else if (message.contains("V:")) {
             String[] separated = message.split(":");
             float velocity = Float.parseFloat(separated[1]);
+            fragmentStatistics.addEntryVelocity(velocity);
         }
-        if (message.contains("A")) {
+        else if (message.contains("A")) {
             String[] separeted = message.split(":");
             float angle = Float.parseFloat(separeted[1]);
+            fragmentStatistics.addEntryAngle(angle);
         }
 
     }

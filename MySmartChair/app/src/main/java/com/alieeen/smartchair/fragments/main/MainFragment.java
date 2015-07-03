@@ -128,7 +128,7 @@ public class MainFragment extends Fragment implements
         setUpSpeechRegonition();
         ///showWarning();
 
-        /*
+/*
         new Thread(new Runnable() {
 
             @Override
@@ -153,8 +153,8 @@ public class MainFragment extends Fragment implements
                     }
                 }
             }
-        }).start();
-        */
+        }).start();*/
+
 
         return v;
     }
