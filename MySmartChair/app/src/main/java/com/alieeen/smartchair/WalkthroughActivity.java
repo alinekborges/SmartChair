@@ -44,8 +44,6 @@ public class WalkthroughActivity extends ActionBarActivity {
         mIndicator = (CirclePageIndicator)findViewById(R.id.indicator);
         mIndicator.setViewPager(mPager);
 
-
-
         mIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -95,8 +93,6 @@ public class WalkthroughActivity extends ActionBarActivity {
                 finish();
             }
         });
-
-
 
     }
 

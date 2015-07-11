@@ -19,7 +19,7 @@ public class UIUpdater {
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
     private Runnable mStatusChecker;
-    private int UPDATE_INTERVAL = 5000;
+    private int UPDATE_INTERVAL = 11000;
 
     /**
      * Creates an UIUpdater object, that can be used to

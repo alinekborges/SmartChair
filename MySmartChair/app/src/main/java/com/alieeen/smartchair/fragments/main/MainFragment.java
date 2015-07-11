@@ -5,9 +5,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
+import android.media.Image;
 import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,9 +56,6 @@ public class MainFragment extends Fragment implements
      * 4 - back
      * 5 - stop
      */
-
-    private final String DEVICE_NAME = "HC-06";
-
                                                                                                                                                                                                                                                         //************************************************
     //Cool views to show what we need to show
     private View v;
@@ -69,6 +69,7 @@ public class MainFragment extends Fragment implements
     private TextView txt_bluetooth_devicename;
     private TextView txt_bluetooth_address;
     private TextView txt_bluetooth_status;
+    private ImageView img_bluetooth_status;
 
     private ImageView img_microfone;
 
@@ -126,35 +127,6 @@ public class MainFragment extends Fragment implements
         //Initialize components
         initComponents();
         setUpSpeechRegonition();
-        ///showWarning();
-
-/*
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                for(int i = 0; i < 5000; i++) {
-                    if (i > 3) {
-                    getActivity().runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-
-                                showWarning();
-
-                        }
-                    });}
-
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();*/
-
 
         return v;
     }
@@ -179,6 +151,7 @@ public class MainFragment extends Fragment implements
         txt_bluetooth_address = (TextView) v.findViewById(R.id.txt_bluetooth_address);
         txt_bluetooth_devicename = (TextView) v.findViewById(R.id.txt_bluetooth_devicename);
         txt_bluetooth_status = (TextView) v.findViewById(R.id.txt_bluetooth_status);
+        img_bluetooth_status = (ImageView) v.findViewById(R.id.imgBluetoothStatus);
 
         img_microfone = (ImageView) v.findViewById(R.id.img_microfone);
         img_microfone.setBackgroundResource(R.drawable.microphone_animation);
@@ -187,10 +160,48 @@ public class MainFragment extends Fragment implements
 
         warning = (ImageView) v.findViewById(R.id.img_warning);
 
-        printBluetoothError("Not Connected");
+        setUpTextListeners();
+
 
     }
 
+    private void setUpTextListeners() {
+        txt_front.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bluetoothSend(Directions.Front);
+                setTextResult(txt_front);
+            }
+        });
+        txt_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bluetoothSend(Directions.Back);
+                setTextResult(txt_back);
+            }
+        });
+        txt_right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bluetoothSend(Directions.Right);
+                setTextResult(txt_right);
+            }
+        });
+        txt_left.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bluetoothSend(Directions.Left);
+                setTextResult(txt_left);
+            }
+        });
+        txt_stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bluetoothSend(Directions.Stop);
+                setTextResult(txt_stop);
+            }
+        });
+    }
     //endregion
 
     //region Speech Recognition Listener
@@ -256,7 +267,7 @@ public class MainFragment extends Fragment implements
             setTextResult(txt_left);
             bluetoothSend(Directions.Left);
         }
-        if (text.contains("break") || text.contains("fuck")) {
+        if (text.contains("break")) {
         setTextResult(txt_stop);
         bluetoothSend(Directions.Stop);
     }
@@ -297,16 +308,10 @@ public class MainFragment extends Fragment implements
     private void switchSearch(String searchName) {
         recognizer.stop();
 
-        // If we are not spotting, start listening with timeout (10000 ms or 10 seconds).
-        //if (searchName.equals(KWS_SEARCH))
-        //    recognizer.startListening(searchName);
-        //else {
-            recognizer.startListening(MENU_SEARCH, 10000);
-           // Log.i(LOG_TAG,"search: " + searchName);
-        //}
+        recognizer.startListening(MENU_SEARCH, 10000);
 
         String caption = getResources().getString(captions.get(searchName));
-        //txtCaptionText.setText(caption);
+
     }
 
     private void setupRecognizer(File assetsDir) throws IOException {
@@ -337,7 +342,6 @@ public class MainFragment extends Fragment implements
         File menuGrammar = new File(assetsDir, "digits.gram");
         recognizer.addKeywordSearch(MENU_SEARCH, menuGrammar);
 
-
     }
 
     @Override
@@ -350,41 +354,47 @@ public class MainFragment extends Fragment implements
         //switchSearch(KWS_SEARCH);
     }
 
-    //endregion
-
-
     public void printBluetoothInfo() {
 
-        //txt_bluetooth_address.setText(this.bluetoothAddress);
-        //txt_bluetooth_devicename.setText(bluetooth.getConnectedDeviceName());
-        //txt_bluetooth_status.setText("Bluetooth:");
+        if (v != null) {
 
-        //txt_bluetooth_status.setTextColor(getResources().getColor(R.color.text_light));
-        //txt_bluetooth_devicename.setTextColor(getResources().getColor(R.color.text_light));
-        //txt_bluetooth_address.setTextColor(getResources().getColor(R.color.text_light));
+            txt_bluetooth_address.setText(((MainActivity)getActivity()).getBluetoothAddress());
 
+            txt_bluetooth_devicename.setText(MainActivity.DEVICE_NAME);
+            txt_bluetooth_status.setText("Bluetooth:");
 
+            txt_bluetooth_status.setTextColor(getResources().getColor(R.color.text_light));
+            txt_bluetooth_devicename.setTextColor(getResources().getColor(R.color.text_light));
+            txt_bluetooth_address.setTextColor(getResources().getColor(R.color.text_light));
+
+            txt_bluetooth_devicename.setVisibility(View.VISIBLE);
+            img_bluetooth_status.setImageResource(R.drawable.bluetooth_status_on);
+        }
     }
 
     public void printBluetoothError(String error) {
-        //txt_bluetooth_address.setText("");
-        //txt_bluetooth_address.setText(error);
-        //txt_bluetooth_status.setText("");
-        //txt_bluetooth_status.setText("Bluetooth connection error");
-        //txt_bluetooth_status.setTextColor(getResources().getColor(R.color.text_error));
+
+        if (v != null) {
+            txt_bluetooth_address.setText("");
+            txt_bluetooth_address.setText(error);
+            txt_bluetooth_status.setText("");
+            txt_bluetooth_status.setText("Bluetooth connection error");
+            txt_bluetooth_status.setTextColor(getResources().getColor(R.color.text_error));
+            txt_bluetooth_devicename.setVisibility(View.INVISIBLE);
+            img_bluetooth_status.setImageResource(R.drawable.bluetooth_error);
+
+        }
     }
 
     public void showWarning() {
         warning.setVisibility(View.VISIBLE);
         final ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
-        //tg.startTone(ToneGenerator.TONE_PROP_BEEP);
         tg.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 1200); //200 is duration in ms
 
     }
 
     public void hideWarning() {
         warning.setVisibility(View.INVISIBLE);
-
     }
 
     //endregion

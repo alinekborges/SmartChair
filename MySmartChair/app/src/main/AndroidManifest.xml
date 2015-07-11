@@ -19,10 +19,12 @@
         android:allowBackup="false"
         android:icon="@drawable/icon"
         android:label="SmartChair"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        >
         <activity
             android:name="com.alieeen.smartchair.SplashScreen"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,12 +35,14 @@
         <activity android:name="com.alieeen.smartchair.bluetooth.DeviceList" />
         <activity
             android:name="com.alieeen.smartchair.WalkthroughActivity"
-            android:label="@string/title_activity_walkthrough" >
+            android:label="@string/title_activity_walkthrough"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.alieeen.smartchair.MainActivity"
             android:label="@string/title_activity_main"
-            android:theme="@style/MyNavigationDrawerTheme" >
+            android:theme="@style/MyNavigationDrawerTheme"
+            android:screenOrientation="portrait">
         </activity>
 
     </application>

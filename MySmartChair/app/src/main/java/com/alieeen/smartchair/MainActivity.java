@@ -23,20 +23,18 @@ import com.alieeen.smartchair.fragments.main.TestOutFragment_;
 
 import com.alieeen.smartchair.util.Directions;
 import com.alieeen.smartchair.util.UIUpdater;
-
 import it.neokree.materialnavigationdrawer.MaterialNavigationDrawer;
-import it.neokree.materialnavigationdrawer.elements.MaterialSection;
 
 //https://github.com/akexorcist/Android-BluetoothSPPLibrary
 public class MainActivity extends MaterialNavigationDrawer {
 
-    private static final String TAG = "MAIN";
+
     private static final String B_TAG = "BLUETOOTH";
-    private final String DEVICE_NAME = "HC-06";
+    public static final String DEVICE_NAME = "HC-06";
 
     //region bluetooth variables
     private BluetoothSPP bluetooth;
-    private String bluetoothAddress;
+    private String bluetoothAddress = "";
 
     UIUpdater mUIUpdater;
 
@@ -53,7 +51,6 @@ public class MainActivity extends MaterialNavigationDrawer {
         this.isConnected = false;
         fragmentMain = new MainFragment_();
         setupBluetooth();
-        //this.bluetooth = fragmentMain.getBluetooth();
 
         fragmentStatistics = new StatisticsFragment();
         fragmentTestOut = new TestOutFragment_();
@@ -69,15 +66,20 @@ public class MainActivity extends MaterialNavigationDrawer {
         this.addBottomSection(newSection("SETTINGS", new SettingsFragment()));
         this.addBottomSection(newSection("ABOUT", new AboutUsFragment()));
 
-        mUIUpdater = new UIUpdater(new Runnable() {
-            @Override
-            public void run() {
-                sendHandShake();
-            }
-        });
 
-        mUIUpdater.startUpdates();
 
+    }
+
+    private void checkConnection() {
+        if (!isConnected) {
+            fragmentMain.printBluetoothError("Connection lost");
+        }
+        if (isConnected) {
+            //coloca o conectado para falso. A principio, em 10segundos virá
+            //outro sinal de handshake que levará ele para true. Se isso não acontecer,
+            //cai no if ali de cima e mostra erro
+            isConnected = false;
+        }
     }
 
     public void onDestroy() {
@@ -127,20 +129,24 @@ public class MainActivity extends MaterialNavigationDrawer {
 
     private void bluetoothAutoConnect() {
         Log.i("Check", "start auto connection");
-        bluetooth.autoConnect(DEVICE_NAME);
-        if (!isConnected) {
-            sendHandShake();
+        if (isConnected == true) {
+            return;
+        }
+        boolean connected = bluetooth.autoConnect(DEVICE_NAME);
+        if (connected) {
+            fragmentMain.printBluetoothInfo();
+            UIUpdater uiUpdater = new UIUpdater(new Runnable() {
+                @Override
+                public void run() {
+                    checkConnection();
+                }
+            });
+            uiUpdater.startUpdates();
+        } else {
+            fragmentMain.printBluetoothError("Pair " + DEVICE_NAME + " to your device");
         }
     }
 
-    private void sendHandShake() {
-        try {
-           //bluetoothSend("0");
-        } catch (Exception ex) {
-
-        }
-
-    }
 
     public void bluetoothSend(Directions direction) {
         bluetoothSend(direction.getString());
@@ -262,7 +268,6 @@ public class MainActivity extends MaterialNavigationDrawer {
         if(requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
             if(resultCode == Activity.RESULT_OK)
                 bluetooth.connect(data);
-            //btnConnect.setText("CONNECTED+01!");
         } else if(requestCode == BluetoothState.REQUEST_ENABLE_BT) {
             if(resultCode == Activity.RESULT_OK) {
                 bluetooth.setupService();
@@ -275,11 +280,9 @@ public class MainActivity extends MaterialNavigationDrawer {
         }
     }
 
-    public boolean isConnected() {
-        return isConnected;
+    public String getBluetoothAddress() {
+        return bluetoothAddress;
     }
 
-    public void setIsConnected(boolean isConnected) {
-        this.isConnected = isConnected;
-    }
+    //endregion
 }
