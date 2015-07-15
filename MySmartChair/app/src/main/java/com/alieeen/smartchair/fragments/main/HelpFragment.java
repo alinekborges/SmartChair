@@ -1,10 +1,13 @@
 package com.alieeen.smartchair.fragments.main;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.alieeen.smartchair.R;
 
@@ -41,7 +44,18 @@ public class HelpFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.help_fragment, container, false);
 
+        Button btn = (Button) v.findViewById(R.id.btn_bluetooth_settings);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openBluetoothSettings();
+            }
+        });
         return v;
+    }
+
+    public void openBluetoothSettings() {
+        startActivity(new Intent(Settings.ACTION_BLUETOOTH_SETTINGS));
     }
 }
 

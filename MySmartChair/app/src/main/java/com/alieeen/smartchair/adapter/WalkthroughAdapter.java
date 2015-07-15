@@ -35,8 +35,6 @@ public class WalkthroughAdapter extends FragmentPagerAdapter {
             default:
                 return FragmentWalkthrough01.newInstance();
         }
-
-        //return TestFragment.newInstance(CONTENT[position % CONTENT.length]);
     }
 
     @Override
@@ -44,12 +42,5 @@ public class WalkthroughAdapter extends FragmentPagerAdapter {
         return 4;
     }
 
-    /*
-    public void setCount(int count) {
-        if (count > 0 && count <= 10) {
-            mCount = count;
-            notifyDataSetChanged();
-        }
-    }*/
 }
 

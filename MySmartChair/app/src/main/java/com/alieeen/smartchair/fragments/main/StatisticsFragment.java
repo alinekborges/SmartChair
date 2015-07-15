@@ -29,6 +29,8 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
     private LineChart angleChart;
     private int year = 2015;
 
+    private float lastAngle = 0;
+
     protected String[] mMonths = new String[] {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
     };
@@ -76,31 +78,6 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         setUpAngleChart();
 
 
-/*
-                new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                for(int i = 0; i < 5000; i++) {
-
-                    getActivity().runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            addEntryEncoder();
-                            addEntryAngle();
-                        }
-                    });
-
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }).start();*/
 
         return v;
     }
@@ -228,6 +205,7 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         //xl.setTypeface(tf);
         xl.setTextColor(Color.DKGRAY);
         xl.setDrawGridLines(false);
+        xl.setDrawLabels(true);
         //xl.setAvoidFirstLastClipping(true);
         //xl.setSpaceBetweenLabels(1);
         xl.setEnabled(false);
@@ -235,7 +213,7 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
         YAxis leftAxis = encoderChart.getAxisLeft();
         //leftAxis.setTypeface(tf);
         leftAxis.setTextColor(Color.DKGRAY);
-        leftAxis.setAxisMaxValue(2f);
+        leftAxis.setAxisMaxValue(4f);
         leftAxis.setAxisMinValue(0f);
         leftAxis.setStartAtZero(true);
         leftAxis.setDrawGridLines(true);
@@ -260,7 +238,7 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
             // set.addEntryEncoder(...); // can be called as well
 
             if (set == null) {
-                set = createSet("velocity (m/s)");
+                set = createSet("");
                 data.addDataSet(set);
             }
 
@@ -353,6 +331,14 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
 
         }
 
+        value = (value - 510) /15;
+        if (lastAngle != 0) {
+
+            value = (lastAngle + value)/2;
+            lastAngle = value;
+        }
+
+
         LineData data = angleChart.getData();
 
         if (data != null) {
@@ -361,7 +347,7 @@ public class StatisticsFragment extends Fragment implements OnChartValueSelected
             // set.addEntryEncoder(...); // can be called as well
 
             if (set == null) {
-                set = createSet("angle");
+                set = createSet("");
                 data.addDataSet(set);
             }
 

@@ -15,7 +15,7 @@
     <string name="title_activity_main">MainActivity</string>
 
     <string name="walktrough01_title">Easy and quick</string>
-    <string name="walktrough01_description">The chair will answer your voice commands and respond right away</string>
+    <string name="walktrough01_description">The app will recognize your voice commands immediately</string>
 
     <string name="walktrough02_title">Bluetooth Connection</string>
     <string name="walktrough02_description">Commands will be sent via bluetooth connection. Pair your device to HC-05 </string>

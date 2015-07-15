@@ -50,7 +50,6 @@ public class MainActivity extends MaterialNavigationDrawer {
 
         this.isConnected = false;
         fragmentMain = new MainFragment_();
-        setupBluetooth();
 
         fragmentStatistics = new StatisticsFragment();
         fragmentTestOut = new TestOutFragment_();
@@ -66,7 +65,9 @@ public class MainActivity extends MaterialNavigationDrawer {
         this.addBottomSection(newSection("SETTINGS", new SettingsFragment()));
         this.addBottomSection(newSection("ABOUT", new AboutUsFragment()));
 
+        setBackPattern(MaterialNavigationDrawer.BACKPATTERN_BACK_TO_FIRST);
 
+        setupBluetooth();
 
     }
 
@@ -83,9 +84,11 @@ public class MainActivity extends MaterialNavigationDrawer {
     }
 
     public void onDestroy() {
-        mUIUpdater.stopUpdates();
-    }
+        if (mUIUpdater != null) {
+            mUIUpdater.stopUpdates();
+        }
 
+    }
 
     public void bluetoothSend(String message) {
 
@@ -134,14 +137,15 @@ public class MainActivity extends MaterialNavigationDrawer {
         }
         boolean connected = bluetooth.autoConnect(DEVICE_NAME);
         if (connected) {
+            isConnected = true;
             fragmentMain.printBluetoothInfo();
-            UIUpdater uiUpdater = new UIUpdater(new Runnable() {
+            mUIUpdater = new UIUpdater(new Runnable() {
                 @Override
                 public void run() {
                     checkConnection();
                 }
             });
-            uiUpdater.startUpdates();
+            mUIUpdater.startUpdates();
         } else {
             fragmentMain.printBluetoothError("Pair " + DEVICE_NAME + " to your device");
         }
@@ -249,12 +253,15 @@ public class MainActivity extends MaterialNavigationDrawer {
             Log.i("BT", "Warning");
 
         }
+        else if (message.contains("Move")) {
+            fragmentMain.hideWarning();
+        }
         else if (message.contains("V:")) {
             String[] separated = message.split(":");
             float velocity = Float.parseFloat(separated[1]);
             fragmentStatistics.addEntryVelocity(velocity);
         }
-        else if (message.contains("A")) {
+        else if (message.contains("A:")) {
             String[] separeted = message.split(":");
             float angle = Float.parseFloat(separeted[1]);
             fragmentStatistics.addEntryAngle(angle);
@@ -283,6 +290,5 @@ public class MainActivity extends MaterialNavigationDrawer {
     public String getBluetoothAddress() {
         return bluetoothAddress;
     }
-
     //endregion
 }

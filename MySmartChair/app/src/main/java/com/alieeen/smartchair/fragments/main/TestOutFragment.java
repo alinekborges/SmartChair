@@ -82,26 +82,20 @@ public class TestOutFragment extends Fragment {
             adapter.notifyDataSetChanged();
             recyclerView.scrollToPosition(adapter.getItemCount() - 1);
         }
-
     }
 
     @AfterViews
     public void initComponents() {
 
-        //App.getInstance().addReceivedMessage("Hello");
-
         recyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
 
         adapter = new MessagesAdapter(getActivity(), App.getInstance().getMessages());
         recyclerView.setAdapter(adapter);
 
-
     }
-
 
 }
 

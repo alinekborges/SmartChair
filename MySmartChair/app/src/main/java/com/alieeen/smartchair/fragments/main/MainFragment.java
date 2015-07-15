@@ -257,7 +257,7 @@ public class MainFragment extends Fragment implements
         } else if (text.contains("backward")) {
             setTextResult(txt_back);
             bluetoothSend(Directions.Back);
-        } else if (text.contains("reverse")) {
+        } else if (text.contains("back")) {
             setTextResult(txt_back);
             bluetoothSend(Directions.Back);
         } else if (text.contains("right")) {
@@ -356,7 +356,7 @@ public class MainFragment extends Fragment implements
 
     public void printBluetoothInfo() {
 
-        if (v != null) {
+        if (v != null && getActivity() != null) {
 
             txt_bluetooth_address.setText(((MainActivity)getActivity()).getBluetoothAddress());
 
@@ -374,7 +374,7 @@ public class MainFragment extends Fragment implements
 
     public void printBluetoothError(String error) {
 
-        if (v != null) {
+        if (v != null && isAdded()) {
             txt_bluetooth_address.setText("");
             txt_bluetooth_address.setText(error);
             txt_bluetooth_status.setText("");
